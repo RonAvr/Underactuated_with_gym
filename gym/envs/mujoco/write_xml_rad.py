@@ -25,6 +25,14 @@ proximal_distal_joint_range = f"{-30 * deg_to_rad} {30 * deg_to_rad}"
 tendon_stiffness = 1000
 tendon_range = 0.1
 
+# Object to grab parameters
+diameter = 0.01
+height = 0.07
+center_off_body_z = 0.21
+x_pos = 0.02
+y_pos = 0
+z_pos = center_off_body_z - height / 2
+
 MODEL_XML = f"""
 <?xml version="1.0" ?>
 <mujoco>
@@ -136,7 +144,10 @@ MODEL_XML = f"""
           </body>
       </body>
 
-
+    <body name="target_body">
+        <geom pos="{x_pos} {y_pos} {z_pos}" size="{diameter} {height}" type="cylinder" name="target_body"/>
+        <joint type="free"/>
+    </body>
    </worldbody>
 
    <tendon> <!-- Creating the tendon's path according to the sites -->

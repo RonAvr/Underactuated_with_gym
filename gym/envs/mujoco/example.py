@@ -99,8 +99,8 @@ class Example(MuJocoPyEnv, utils.EzPickle):
         Returns: Resetting the simulation to the inputs values
         """
 
-        if (len(qpos_reset) != 9):
-            raise ValueError('The qpos_reset array must be at size of 9')
+        # if (len(qpos_reset) != 9):
+        #     raise ValueError('The qpos_reset array must be at size of 9')
 
         self.sim.data.qpos[:] = qpos_reset
         self.sim.data.qvel[:] = 0
