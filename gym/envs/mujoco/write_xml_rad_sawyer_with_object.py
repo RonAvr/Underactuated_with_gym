@@ -25,6 +25,15 @@ proximal_distal_joint_range = f"{-30 * deg_to_rad} {30 * deg_to_rad}"
 tendon_stiffness = 1000
 tendon_range = 0.1
 
+# Object to grab parameters
+x_pos = 0.88
+y_pos = 0.135
+z_pos = -0.1
+diameter = 0.02
+height = 0.07
+floor_width = 0.1
+floor_length = 0.1
+
 MODEL_XML = f"""
 <mujoco model="sawyer">
 	<compiler angle="radian"/>
@@ -253,7 +262,11 @@ MODEL_XML = f"""
     	</body>
     	
         <body>
-			<geom pos="0.9 0.15 -0.1" size="0.03 0.07" type="cylinder" name="target_body"/>
+			<geom pos="{x_pos} {y_pos} {z_pos}" size="{diameter} {height}" type="cylinder" name="target_body"/>
+			<joint type="free"/>
+		</body>
+        <body>
+			<geom pos="{x_pos} {y_pos} {z_pos - height}" size="{floor_width} {floor_length} 0.1" type="plane" name="floor"/>
 		</body>
     </worldbody>
 

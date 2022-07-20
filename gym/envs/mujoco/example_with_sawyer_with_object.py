@@ -99,8 +99,8 @@ class ExampleWithSawyerWithObject(MuJocoPyEnv, utils.EzPickle):
         Returns: Resetting the simulation to the inputs values
         """
 
-        if (len(qpos_reset) != 16):
-            raise ValueError('The qpos_reset array must be at size of 16')
+        # if (len(qpos_reset) != 16):
+        #     raise ValueError('The qpos_reset array must be at size of 16')
 
         self.sim.data.qpos[:] = qpos_reset
         self.sim.data.qvel[:] = 0
@@ -138,3 +138,35 @@ class ExampleWithSawyerWithObject(MuJocoPyEnv, utils.EzPickle):
         self.sim.data.ctrl[7] = ctrl[0]
         self.sim.data.ctrl[8] = ctrl[1]
         self.sim.data.ctrl[9] = ctrl[2]
+
+    def set_one_motor_ctrl(self, motor,ctrl):
+        """
+
+        Args: The value of the control input for a motor
+            motor: number
+            ctrl: number
+
+        Returns: Setting the motor value according to the input
+
+        """
+
+        if (motor > 9):
+            raise ValueError('Invalid motor number')
+
+        self.sim.data.ctrl[motor] = ctrl
+
+    def set_one_joint_value(self, joint ,value):
+        """
+
+        Args: Setting a joint to a specific value
+            joint: number
+            value: number
+
+        Returns: Setting the joint
+
+        """
+
+        # if (joint > 15):
+        #     raise ValueError('Invalid motor number')
+
+        self.sim.data.qpos[joint] = value
