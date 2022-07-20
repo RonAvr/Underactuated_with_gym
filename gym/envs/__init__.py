@@ -340,3 +340,10 @@ register(
     max_episode_steps=1000,
     reward_threshold=9100.0,
 )
+
+register(
+    id="ExampleWithSawyerWithObject",
+    entry_point="gym.envs.mujoco.example_with_sawyer_with_object:ExampleWithSawyerWithObject",
+    max_episode_steps=1000,
+    reward_threshold=9100.0,
+)

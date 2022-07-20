@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Making the new environment
-env = gym.make("ExampleWithSawyer")
+env = gym.make("ExampleWithSawyerWithObject")
 
 # Resetting the environment
 observation, infos = env.reset(seed=42, return_info=True)

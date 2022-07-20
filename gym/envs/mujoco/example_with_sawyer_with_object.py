@@ -5,7 +5,7 @@ from gym.envs.mujoco import MuJocoPyEnv
 from gym.spaces import Box
 
 
-class ExampleWithSawyer(MuJocoPyEnv, utils.EzPickle):
+class ExampleWithSawyerWithObject(MuJocoPyEnv, utils.EzPickle):
     metadata = {
         "render_modes": [
             "human",
@@ -22,7 +22,7 @@ class ExampleWithSawyer(MuJocoPyEnv, utils.EzPickle):
             low=-np.inf, high=np.inf, shape=(111,), dtype=np.float64
         )
         MuJocoPyEnv.__init__(
-            self, "example_with_sawyer.xml", 5, observation_space=observation_space, **kwargs
+            self, "example_with_sawyer_with_object.xml", 5, observation_space=observation_space, **kwargs
         )
         utils.EzPickle.__init__(self)
 
