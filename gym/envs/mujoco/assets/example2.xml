@@ -1,0 +1,86 @@
+<?xml version="1.0" ?>
+<mujoco>
+    <!-- meshdir - STL files path -->
+    <compiler meshdir="/home/ron/PycharmProjects/pythonProject/meshes/"/>
+    
+   <asset>
+       <texture type="skybox" builtin="gradient" rgb1="1 1 1" rgb2="0 0 0" width="512" height="512"/>
+        <mesh file="base_link.STL"/>
+        <mesh file="proximal_O.STL" scale="0.00100 0.00100 0.00100"/>
+        <mesh file="distal_O.STL" scale="0.00100 0.00100 0.00100"/>
+        <mesh file="swivel_1.STL"/>
+   </asset>
+   
+   <option gravity="0 0 0"/>
+
+   <worldbody>
+
+      <light diffuse="1 1 1" pos="0 0 300" dir="0 0 -1"/>
+
+      <body name="base_link">
+          <geom type="mesh" mesh="base_link"/>
+
+          <!-- Creating the right arm with its motor -->
+          <body name="Right motor">
+              <site name="s11" pos="0.06 0.025 0.035" size="0.0015"/>
+              <geom name="geom1" type="sphere" pos="0.06 0.025 0.04" size="0.005"/>
+              <joint name="joint_1" type="hinge" pos="0.045 0.0125 0.04" axis="0 1 0" limited="true" range="-45 45"/>
+          </body>
+          <body name="swivel_r" pos="0.05 0.025 0.0625" euler="0 0 30" >
+              <geom name="swivel_r" type="mesh" mesh="swivel_1"/>
+
+              <body name="proximal_r" pos="0.0038 0 0.0475">
+                  <site name="s12" pos="0.007 0 -0.04" size="0.0015"/>
+                  <geom name="12_cylinder" type="cylinder" size="0.005 0.01" pos="0.005 0 -0.029" rgba=".3 .9 .3 .4" euler="90 0 0"/>
+                  <site name="s131" pos="0.0035 0 -0.035" size="0.0015"/>
+                  <site name="s13" pos="0 0 -0.03" size="0.0015"/>
+                  <geom name="13_cylinder" type="cylinder" size="0.004 0.01" pos="0.0014 0 -0.0175" rgba=".3 .9 .3 .4" euler="90 0 0"/>
+                  <site name="s132" pos="0.0035 0 -0.023" size="0.0015"/>
+                  <site name="s14" pos="0.005 0 -0.012" size="0.0015"/>
+                  <site name="s15" pos="0 0 0.014" size="0.0015"/>
+                  <geom name="14_cylinder" type="cylinder" size="0.004 0.01" pos="-0.00575 0 0.01675" rgba=".3 .9 .3 .4" euler="90 0 0"/>
+                  <joint name="swivel_proximal_r" type="hinge" axis="0 1 0" pos="0.006 0 -0.03" limited="true" range="-45 45" solimplimit="0.95 0.95 0.1"/>
+                  <geom name="15_cylinder" type="cylinder" size="0.01 0.01" pos="-0.007 0 0.032" rgba=".3 .9 .3 .4" euler="90 0 0"/>
+                  <geom name="proximal_r" type="mesh" mesh="proximal_O" pos="-0.01 -0.008 0.045" euler="90 180 -150"/>
+                  <site name="s16" pos="-0.014 0 0.021" size="0.0015"/>
+                  <body name="distal_r" pos="-0.027 0 0.068" euler="0 65 0">
+                      <joint name="proximal_distal_r" type="hinge" axis="0 1 0" pos="0.041 0 0.0025" limited="true" range="-30 30" solimplimit="0.95 0.95 0.1"/>
+                      <geom name="distal_r" type="mesh" mesh="distal_O" pos="-0.015 0.015 0.015" euler="-90 90 0"/>
+                      <site name="s17" pos="0.022 0 0.009" size="0.0015"/>
+                  </body>
+              </body>
+          </body>
+
+      </body>
+
+
+   </worldbody>
+
+   <tendon> <!-- Creating the tendon's path according to the sites -->
+      <spatial name="tendon_r" width="0.001 " rgba=".95 .3 .3 1" limited="true" range="0 0.1" stiffness="500">
+          <site site="s11"/>
+          <site site="s12"/>
+          <site site="s131"/>
+          <geom geom="12_cylinder"/>
+          <site site="s132"/>
+          <geom geom="13_cylinder"/>
+          <site site="s14"/>
+          <site site="s15"/>
+          <geom geom="14_cylinder"/>
+          <site site="s16"/>
+          <geom geom="15_cylinder"/>
+          <site site="s17"/>
+      </spatial>
+   </tendon>
+
+   <actuator> <!-- Adding motors to the relevant joints -->
+        <motor joint="joint_1" name="swivel_proximal_r_motor" gear="1" ctrllimited="true" ctrlrange="-0.035 0.04"/>
+    </actuator>
+
+    <contact>
+        <exclude name="exclude1" body1="swivel_r" body2="proximal_r"/>
+        <exclude name="exclude2" body1="Right motor" body2="base_link"/>
+
+        <exclude name="exclude3" body1="swivel_r" body2="base_link"/>
+    </contact>
+</mujoco>
