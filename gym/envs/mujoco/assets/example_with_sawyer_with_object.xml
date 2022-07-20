@@ -24,7 +24,7 @@
 
     </asset>
 
-   <option gravity="0 0 0"/>
+   <option gravity="0 0 0" collision="all"/>
 
     <worldbody>
     	<body name="base" pos="0 0 0">
@@ -192,7 +192,7 @@
 													  <site name="s36" pos="0.0025 0 0.021" size="0.0015"/>
 													  <body name="distal_c" pos="0.02 0 0.066" euler="0 2.0943951 0">
 														  <joint name="proximal_distal_c" type="hinge" axis="0 1 0" pos="0.041 0 -0.0025" limited="true" range="-0.523598775 0.523598775" stiffness="1e-05" damping="1e-05"/>
-														  <geom type="mesh" mesh="distal_O" pos="-0.015 -0.015 -0.015" euler="1.5707963249999999 1.5707963249999999 0"/>
+														  <geom name="distal_c" type="mesh" mesh="distal_O" pos="-0.015 -0.015 -0.015" euler="1.5707963249999999 1.5707963249999999 0"/>
 														  <site name="s37" pos="0.022 0 -0.01" size="0.0015"/>
 													  </body>
 												  </body>
@@ -225,7 +225,7 @@
     		</body>
     	</body>
     	
-        <body>
+        <body name="target_body">
 			<geom pos="0.88 0.135 -0.1" size="0.02 0.07" type="cylinder" name="target_body"/>
 			<joint type="free"/>
 		</body>
@@ -306,7 +306,11 @@
 	<exclude name="exclude7" body1="proximal_r" body2="swivel_r"/>
 	<exclude name="exclude8" body1="proximal_l" body2="swivel_l"/>
 	<exclude name="exclude9" body1="Right motor" body2="base_link"/>
-
+    
+    <pair name="pair1" geom1="distal_r" geom2="target_body" condim="1" friction="1"/>
+	<pair name="pair2" geom1="distal_l" geom2="target_body" condim="1" friction="1"/>
+	<pair name="pair3" geom1="distal_c" geom2="target_body" condim="1" friction="1"/>
+	
 	</contact>
 
 </mujoco>

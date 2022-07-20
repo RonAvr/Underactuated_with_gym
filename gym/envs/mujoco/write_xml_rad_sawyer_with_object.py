@@ -1,5 +1,6 @@
 g = 0
 deg_to_rad = 0.0174532925
+collision = "all"
 
 damping = 0.00001
 stiffness = 0.00001
@@ -31,8 +32,14 @@ y_pos = 0.135
 z_pos = -0.1
 diameter = 0.02
 height = 0.07
+head_diameter = 0.03
+head_height = 0.01
 floor_width = 0.1
 floor_length = 0.1
+
+# Contacts coefficients
+condim = 1
+friction = "1"
 
 MODEL_XML = f"""
 <mujoco model="sawyer">
@@ -60,7 +67,7 @@ MODEL_XML = f"""
 
     </asset>
 
-   <option gravity="0 0 {g}"/>
+   <option gravity="0 0 {g}" collision="{collision}"/>
 
     <worldbody>
     	<body name="base" pos="0 0 0">
@@ -228,7 +235,7 @@ MODEL_XML = f"""
 													  <site name="s36" pos="0.0025 0 0.021" size="0.0015"/>
 													  <body name="distal_c" pos="0.02 0 0.066" euler="0 2.0943951 0">
 														  <joint name="proximal_distal_c" type="hinge" axis="0 1 0" pos="0.041 0 -0.0025" limited="true" range="-0.523598775 0.523598775" stiffness="1e-05" damping="1e-05"/>
-														  <geom type="mesh" mesh="distal_O" pos="-0.015 -0.015 -0.015" euler="1.5707963249999999 1.5707963249999999 0"/>
+														  <geom name="distal_c" type="mesh" mesh="distal_O" pos="-0.015 -0.015 -0.015" euler="1.5707963249999999 1.5707963249999999 0"/>
 														  <site name="s37" pos="0.022 0 -0.01" size="0.0015"/>
 													  </body>
 												  </body>
@@ -261,7 +268,7 @@ MODEL_XML = f"""
     		</body>
     	</body>
     	
-        <body>
+        <body name="target_body">
 			<geom pos="{x_pos} {y_pos} {z_pos}" size="{diameter} {height}" type="cylinder" name="target_body"/>
 			<joint type="free"/>
 		</body>
@@ -342,7 +349,11 @@ MODEL_XML = f"""
 	<exclude name="exclude7" body1="proximal_r" body2="swivel_r"/>
 	<exclude name="exclude8" body1="proximal_l" body2="swivel_l"/>
 	<exclude name="exclude9" body1="Right motor" body2="base_link"/>
-
+    
+    <pair name="pair1" geom1="distal_r" geom2="target_body" condim="{condim}" friction="{friction}"/>
+	<pair name="pair2" geom1="distal_l" geom2="target_body" condim="{condim}" friction="{friction}"/>
+	<pair name="pair3" geom1="distal_c" geom2="target_body" condim="{condim}" friction="{friction}"/>
+	
 	</contact>
 
 </mujoco>
