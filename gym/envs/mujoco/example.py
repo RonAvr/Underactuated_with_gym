@@ -1,5 +1,6 @@
 import numpy as np
-
+import math
+import sys
 from gym import utils
 from gym.envs.mujoco import MuJocoPyEnv
 from gym.spaces import Box
@@ -123,6 +124,58 @@ class Example(MuJocoPyEnv, utils.EzPickle):
                 self.sim.data.ctrl
             ]
         )
+
+    def get_body_pos(self, body_name):
+        #the reference position where the camera is located
+        ref_pos = [0.02, 0, 0.0625]
+
+        # getting the site position which located at the bottom of the target body
+        site_pos = self.sim.data.get_site_xpos(body_name)
+
+        # getting the orientation matrix and storing the roll pitch and yaw in different array
+        # xmat = self.sim.data.get_geom_xmat(body_name)
+        # rpy = [xmat[0][00], xmat[1][1], xmat[2][2]]
+        rpy = self.calc_rpy2(body_name)
+
+        # absolute x,y,z position
+        abs_pos = site_pos - ref_pos
+
+        # adding the roll pitch and yaw to the array
+        abs_pos = np.append(abs_pos, rpy)
+
+        return abs_pos
+
+    def calc_rpy(self, body_name):
+        xmat = self.sim.data.get_geom_xmat(body_name)
+        pitch = math.atan2(-xmat[2][0] , (math.sqrt(xmat[0][0] ** 2 + xmat[1][0] ** 2 )))
+        roll = math.atan2(xmat[2][0] / math.cos(pitch) , xmat[0][0] / math.cos(pitch))
+        yaw = math.atan2(xmat[2][1] / math.cos(pitch) , xmat[2][2] / math.cos(pitch))
+
+        rpy = [roll, pitch, yaw]
+
+        return (rpy)
+
+    def calc_rpy2(self, body_name):
+        # A function to convert orientation matrix to rpy
+        # https://www.meccanismocomplesso.org/en/3d-rotations-and-euler-angles-in-python/
+
+        tol = sys.float_info.epsilon * 10
+        xmat = self.sim.data.get_geom_xmat(body_name)
+
+        if abs(xmat[0, 0]) < tol and abs(xmat[1, 0]) < tol:
+            eul1 = 0
+            eul2 = math.atan2(-xmat[2, 0], xmat[0, 0])
+            eul3 = math.atan2(-xmat[1, 2], xmat[1, 1])
+        else:
+            eul1 = math.atan2(xmat[1, 0], xmat[0, 0])
+            sp = math.sin(eul1)
+            cp = math.cos(eul1)
+            eul2 = math.atan2(-xmat[2, 0], cp * xmat[0, 0] + sp * xmat[1, 0])
+            eul3 = math.atan2(sp * xmat[0, 2] - cp * xmat[1, 2], cp * xmat[1, 1] - sp * xmat[0, 1])
+
+        rpy = [eul1, eul2, eul3]
+
+        return (rpy)
 
     def set_motor_ctrl(self, ctrl):
         """

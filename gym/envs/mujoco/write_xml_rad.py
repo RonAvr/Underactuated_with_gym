@@ -146,6 +146,7 @@ MODEL_XML = f"""
 
     <body name="target_body">
         <geom pos="{x_pos} {y_pos} {z_pos}" size="{diameter} {height}" type="cylinder" name="target_body"/>
+        <site name="target_body" pos="{x_pos} {y_pos} {z_pos - height}" size="0.0015"/>
         <joint type="free"/>
     </body>
    </worldbody>
