@@ -80,18 +80,6 @@ class Example(MuJocoPyEnv, utils.EzPickle):
         assert self.viewer is not None
         self.viewer.cam.distance = self.model.stat.extent * 0.5
 
-    def controller(self):
-
-        j1_target = -0.3
-
-        k1 = 0.03
-
-        j1 = - k1 * (self.sim.data.qpos[1] - (j1_target)) - k1 * self.sim.data.qvel[1]
-
-        self.sim.data.ctrl[0] = j1
-
-        self.sim.step()
-
     def set_reset(self, qpos_reset):
         """
         Args: The value of all the joints in the simulation
@@ -126,16 +114,14 @@ class Example(MuJocoPyEnv, utils.EzPickle):
         )
 
     def get_body_pos(self, body_name):
-        #the reference position where the camera is located
+        # The reference position where the camera is located
         ref_pos = [0.02, 0, 0.0625]
 
-        # getting the site position which located at the bottom of the target body
+        # Getting the site position which located at the bottom of the target body
         site_pos = self.sim.data.get_site_xpos(body_name)
 
-        # getting the orientation matrix and storing the roll pitch and yaw in different array
-        # xmat = self.sim.data.get_geom_xmat(body_name)
-        # rpy = [xmat[0][00], xmat[1][1], xmat[2][2]]
-        rpy = self.calc_rpy2(body_name)
+        # Getting the roll pitch and yaw of the body
+        rpy = self.calc_rpy(body_name)
 
         # absolute x,y,z position
         abs_pos = site_pos - ref_pos
@@ -146,16 +132,6 @@ class Example(MuJocoPyEnv, utils.EzPickle):
         return abs_pos
 
     def calc_rpy(self, body_name):
-        xmat = self.sim.data.get_geom_xmat(body_name)
-        pitch = math.atan2(-xmat[2][0] , (math.sqrt(xmat[0][0] ** 2 + xmat[1][0] ** 2 )))
-        roll = math.atan2(xmat[2][0] / math.cos(pitch) , xmat[0][0] / math.cos(pitch))
-        yaw = math.atan2(xmat[2][1] / math.cos(pitch) , xmat[2][2] / math.cos(pitch))
-
-        rpy = [roll, pitch, yaw]
-
-        return (rpy)
-
-    def calc_rpy2(self, body_name):
         # A function to convert orientation matrix to rpy
         # https://www.meccanismocomplesso.org/en/3d-rotations-and-euler-angles-in-python/
 
@@ -175,7 +151,7 @@ class Example(MuJocoPyEnv, utils.EzPickle):
 
         rpy = [eul1, eul2, eul3]
 
-        return (rpy)
+        return rpy
 
     def set_motor_ctrl(self, ctrl):
         """
