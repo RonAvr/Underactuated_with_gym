@@ -1,4 +1,5 @@
 import gym
+import json
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -35,18 +36,12 @@ for i in range(loop):
 
     # Getting target body pos
     target_body_pos = env.get_body_pos('target_body')
-    pos_data.append(target_body_pos)
+    pos_data.append(list(target_body_pos))
 
     # Taking a step and rendering the environment
     env.sim.step()
 
-# Extracting all the data
-x_pos = list(map(lambda x:x[0], pos_data))
-y_pos = list(map(lambda x:x[1], pos_data))
-z_pos = list(map(lambda x:x[2], pos_data))
-roll = list(map(lambda x:x[3], pos_data))
-pitch = list(map(lambda x:x[4], pos_data))
-yaw = list(map(lambda x:x[5], pos_data))
+# Saving the data into json file
+with open('data.json', 'w', encoding='utf-8') as f:
+    json.dump(pos_data, f, ensure_ascii=False, indent=4)
 
-plt.plot(yaw)
-plt.show()
