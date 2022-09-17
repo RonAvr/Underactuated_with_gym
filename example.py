@@ -39,10 +39,10 @@ for i in range(loop):
 
     # Adding the current time to the time_data array
     time_data.append(env.sim.data.time)
-    print(env.sim.data.timer)
+
     # Taking a step and rendering the environment
     env.sim.step()
-    # env.render()
+    env.render()
 
 # Data dict that contains the position data and the time data
 data = {
