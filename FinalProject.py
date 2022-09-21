@@ -47,6 +47,7 @@ def start_sim(motors_k):
         env.sim.step()
         env.render()
 
+    env.close()
     # Data dict that contains the position data and the time data
     data = {
         'pos_data':pos_data,
