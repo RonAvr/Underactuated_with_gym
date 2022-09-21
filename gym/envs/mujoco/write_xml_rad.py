@@ -24,6 +24,7 @@ proximal_distal_joint_range = f"{-30 * deg_to_rad} {30 * deg_to_rad}"
 # Tendons coefficients
 tendon_stiffness = 1000
 tendon_range = 0.1
+tendon_width = 0.001
 
 # Object to grab parameters
 diameter = 0.01
@@ -152,7 +153,7 @@ MODEL_XML = f"""
    </worldbody>
 
    <tendon> <!-- Creating the tendon's path according to the sites -->
-      <spatial name="tendon_r" width="0.001 " rgba=".95 .3 .3 1" limited="true" range="0 {tendon_range}" stiffness="{tendon_stiffness}">
+      <spatial name="tendon_r" width="{tendon_width}" rgba=".95 .3 .3 1" limited="true" range="0 {tendon_range}" stiffness="{tendon_stiffness}">
           <site site="s11"/>
           <site site="s12"/>
           <site site="s131"/>
@@ -166,7 +167,7 @@ MODEL_XML = f"""
           <geom geom="15_cylinder"/>
           <site site="s17"/>
       </spatial>
-      <spatial name="tendon_l" width="0.001 " rgba=".95 .3 .3 1" limited="true" range="0 {tendon_range}" stiffness="{tendon_stiffness}">
+      <spatial name="tendon_l" width="{tendon_width}" rgba=".95 .3 .3 1" limited="true" range="0 {tendon_range}" stiffness="{tendon_stiffness}">
           <site site="s21"/>
           <site site="s22"/>
           <site site="s231"/>
@@ -180,7 +181,7 @@ MODEL_XML = f"""
           <geom geom="25_cylinder"/>
           <site site="s27"/>
       </spatial>
-      <spatial name="tendon_c" width="0.001 " rgba=".95 .3 .3 1" limited="true" range="0 {tendon_range}" stiffness="{tendon_stiffness}">
+      <spatial name="tendon_c" width="{tendon_width}" rgba=".95 .3 .3 1" limited="true" range="0 {tendon_range}" stiffness="{tendon_stiffness}">
           <site site="s31"/>
           <site site="s32"/>
           <site site="s331"/>
