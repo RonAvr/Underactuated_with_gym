@@ -21,26 +21,7 @@ pos_data = []
 time_data = []
 
 for i in range(loop):
-    print(env.get_sensor_data())
-    if (i%root_loop == 0):
-        # Evaluating the value of the activation of the motors
-        c = i/root_loop
-        ctrl = 0.00001
-        k_r = 1 # coefficient for the right motor
-        k_l = 1 # coefficient for the left motor
-        k_c = 3 # coefficient for the center motor
-
-        # activating 3 of the motors in certain value
-        env.set_motor_ctrl([k_r * c * ctrl, k_l *  c * ctrl, k_c *  c * ctrl])
-
-    # Getting target body pos
-    target_body_pos = env.get_body_pos('target_body')
-    pos_data.append(list(target_body_pos))
-
-    # Adding the current time to the time_data array
-    time_data.append(env.sim.data.time)
-
-    # Taking a step and rendering the environment
+    env.close_fingers()
     env.sim.step()
     env.render()
 

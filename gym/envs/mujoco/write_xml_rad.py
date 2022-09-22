@@ -83,6 +83,7 @@ MODEL_XML = f"""
                       <joint name="proximal_distal_r" type="hinge" axis="0 1 0" pos="0.041 0 0.0025" limited="true" range="{proximal_distal_joint_range}" stiffness="{proximal_distal_stiffness}" damping="{proximal_distal_damping}"/>
                       <geom name="distal_r" type="mesh" mesh="distal_O" pos="-0.015 0.015 0.015" euler="{-90 * deg_to_rad} {90 * deg_to_rad} 0"/>
                       <site name="s17" pos="0.022 0 0.009" size="0.0015"/>
+                      <site name="right_sensor" pos="-0.01 0 -0.02" size="0.015"/>
                   </body>
               </body>
           </body>
@@ -113,6 +114,7 @@ MODEL_XML = f"""
                       <joint name="proximal_distal_l" type="hinge" axis="0 1 0" pos="0.041 0 0.0025" limited="true" range="{proximal_distal_joint_range}" stiffness="{proximal_distal_stiffness}" damping="{proximal_distal_damping}"/>
                       <geom name="distal_l" type="mesh" mesh="distal_O" pos="-0.015 0.015 0.015" euler="{-90 * deg_to_rad} {90 * deg_to_rad} 0"/>
                       <site name="s27" pos="0.022 0 0.009" size="0.0015"/>
+                      <site name="left_sensor" pos="-0.01 0 -0.02" size="0.015"/>
                   </body>
               </body>
           </body>
@@ -141,6 +143,7 @@ MODEL_XML = f"""
                   <joint name="proximal_distal_c" type="hinge" axis="0 1 0" pos="0.041 0 -0.0025" limited="true" range="{proximal_distal_joint_range}" stiffness="{proximal_distal_stiffness}" damping="{proximal_distal_damping}"/>
                   <geom type="mesh" mesh="distal_O" pos="-0.015 -0.015 -0.015" euler="{90 * deg_to_rad} {90 * deg_to_rad} 0"/>
                   <site name="s37" pos="0.022 0 -0.01" size="0.0015"/>
+                  <site name="center_sensor" pos="-0.01 0 0.02" size="0.015"/>
               </body>
           </body>
       </body>
@@ -217,6 +220,13 @@ MODEL_XML = f"""
         <exclude name="exclude9" body1="Right motor" body2="base_link"/>
 
     </contact>
+    
+    <sensor>
+        <touch name="touchsensor_right" site="right_sensor" />
+        <touch name="touchsensor_left" site="left_sensor" />
+        <touch name="touchsensor_center" site="center_sensor" />
+    </sensor>
+    
 </mujoco>
 
 """

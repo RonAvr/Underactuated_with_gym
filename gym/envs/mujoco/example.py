@@ -167,3 +167,29 @@ class Example(MuJocoPyEnv, utils.EzPickle):
         self.sim.data.ctrl[0] = ctrl[0]
         self.sim.data.ctrl[1] = ctrl[1]
         self.sim.data.ctrl[2] = ctrl[2]
+
+    def get_sensor_data(self):
+        return self.sim.data.sensordata
+
+    def close_fingers(self):
+        right_motor = 0.0001
+        left_motor = 0.0001
+        center_motor = 0.0001
+        while(bool(right_motor and left_motor and center_motor)):
+            print([right_motor, left_motor, center_motor])
+
+            print(bool(right_motor and left_motor and center_motor))
+            sensor_data = self.get_sensor_data()
+            if(sensor_data[0] != 0):
+                print('right motor zero')
+                right_motor = 0
+            if(sensor_data[1] != 0):
+                print('left motor zero')
+                left_motor = 0
+            if(sensor_data[2] != 0):
+                print('center motor zero')
+                center_motor = 0
+            self.sim.step()
+            self.render()
+
+        return

@@ -47,6 +47,7 @@
                       <joint name="proximal_distal_r" type="hinge" axis="0 1 0" pos="0.041 0 0.0025" limited="true" range="-0.523598775 0.523598775" stiffness="1e-05" damping="1e-05"/>
                       <geom name="distal_r" type="mesh" mesh="distal_O" pos="-0.015 0.015 0.015" euler="-1.5707963249999999 1.5707963249999999 0"/>
                       <site name="s17" pos="0.022 0 0.009" size="0.0015"/>
+                      <site name="right_sensor" pos="-0.01 0 -0.02" size="0.015"/>
                   </body>
               </body>
           </body>
@@ -77,6 +78,7 @@
                       <joint name="proximal_distal_l" type="hinge" axis="0 1 0" pos="0.041 0 0.0025" limited="true" range="-0.523598775 0.523598775" stiffness="1e-05" damping="1e-05"/>
                       <geom name="distal_l" type="mesh" mesh="distal_O" pos="-0.015 0.015 0.015" euler="-1.5707963249999999 1.5707963249999999 0"/>
                       <site name="s27" pos="0.022 0 0.009" size="0.0015"/>
+                      <site name="left_sensor" pos="-0.01 0 -0.02" size="0.015"/>
                   </body>
               </body>
           </body>
@@ -105,6 +107,7 @@
                   <joint name="proximal_distal_c" type="hinge" axis="0 1 0" pos="0.041 0 -0.0025" limited="true" range="-0.523598775 0.523598775" stiffness="1e-05" damping="1e-05"/>
                   <geom type="mesh" mesh="distal_O" pos="-0.015 -0.015 -0.015" euler="1.5707963249999999 1.5707963249999999 0"/>
                   <site name="s37" pos="0.022 0 -0.01" size="0.0015"/>
+                  <site name="center_sensor" pos="-0.01 0 0.02" size="0.015"/>
               </body>
           </body>
       </body>
@@ -117,7 +120,7 @@
    </worldbody>
 
    <tendon> <!-- Creating the tendon's path according to the sites -->
-      <spatial name="tendon_r" width="0.001 " rgba=".95 .3 .3 1" limited="true" range="0 0.1" stiffness="1000">
+      <spatial name="tendon_r" width="0.001" rgba=".95 .3 .3 1" limited="true" range="0 0.1" stiffness="1000">
           <site site="s11"/>
           <site site="s12"/>
           <site site="s131"/>
@@ -131,7 +134,7 @@
           <geom geom="15_cylinder"/>
           <site site="s17"/>
       </spatial>
-      <spatial name="tendon_l" width="0.001 " rgba=".95 .3 .3 1" limited="true" range="0 0.1" stiffness="1000">
+      <spatial name="tendon_l" width="0.001" rgba=".95 .3 .3 1" limited="true" range="0 0.1" stiffness="1000">
           <site site="s21"/>
           <site site="s22"/>
           <site site="s231"/>
@@ -145,7 +148,7 @@
           <geom geom="25_cylinder"/>
           <site site="s27"/>
       </spatial>
-      <spatial name="tendon_c" width="0.001 " rgba=".95 .3 .3 1" limited="true" range="0 0.1" stiffness="1000">
+      <spatial name="tendon_c" width="0.001" rgba=".95 .3 .3 1" limited="true" range="0 0.1" stiffness="1000">
           <site site="s31"/>
           <site site="s32"/>
           <site site="s331"/>
@@ -181,5 +184,12 @@
         <exclude name="exclude9" body1="Right motor" body2="base_link"/>
 
     </contact>
+    
+    <sensor>
+        <touch name="touchsensor_right" site="right_sensor" />
+        <touch name="touchsensor_left" site="left_sensor" />
+        <touch name="touchsensor_center" site="center_sensor" />
+    </sensor>
+    
 </mujoco>
 
