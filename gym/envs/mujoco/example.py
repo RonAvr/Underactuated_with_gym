@@ -176,20 +176,23 @@ class Example(MuJocoPyEnv, utils.EzPickle):
         left_motor = 0.0001
         center_motor = 0.0001
         while(bool(right_motor and left_motor and center_motor)):
-            print([right_motor, left_motor, center_motor])
-
-            print(bool(right_motor and left_motor and center_motor))
             sensor_data = self.get_sensor_data()
             if(sensor_data[0] != 0):
-                print('right motor zero')
                 right_motor = 0
             if(sensor_data[1] != 0):
-                print('left motor zero')
                 left_motor = 0
             if(sensor_data[2] != 0):
-                print('center motor zero')
                 center_motor = 0
             self.sim.step()
             self.render()
 
         return
+
+    def move_motors(self, movement):
+        zeros = [0,0,0]
+        self.set_motor_ctrl(movement)
+        self.sim.step()
+        self.render()
+        self.set_motor_ctrl(zeros)
+        self.sim.step()
+        self.render()
