@@ -347,3 +347,10 @@ register(
     max_episode_steps=1000,
     reward_threshold=9100.0,
 )
+
+register(
+    id="Calibrate",
+    entry_point="gym.envs.mujoco.calibrate:Calibrate",
+    max_episode_steps=1000,
+    reward_threshold=9100.0,
+)

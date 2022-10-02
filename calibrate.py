@@ -28,36 +28,36 @@ def main_loop():
     print("Goodbye !")
 
 
-def save_data():
-    # adding the data
-    target_body_pos = env.get_body_pos('target_body')
-    pos_data.append(list(target_body_pos))
-    time_data.append(env.sim.data.time)
+
 
 # Making the new environment
-env = gym.make("Example")
+env = gym.make("Calibrate")
 
 # Resetting the environment
 observation, infos = env.reset(seed=42, return_info=True)
 
 # Resetting the position of the relevant joints
-qpos_reset = np.array([ 0, 0.25, 0, 0, 0.25, 0, 0, -0.15, 0, 0, 0, 0, 0, 0, 0, 0])
+qpos_reset = np.array([ 0, 0.25, 0, 0, 0.25, 0, 0, -0.15, 0])
 env.set_reset(qpos_reset)
 
 # Number of loops the simulation going to loop through
 root_loop = 1000
-loop = 1 * root_loop
+loop = 8 * root_loop
 
 # array to store all the position data
 pos_data = []
 time_data = []
 
 # Closing the fingers tothe target object
-env.close_fingers()
+
+
 
 for i in range(loop):
-    env.move_motors([0.00001,0.00001,0.00001])
-    save_data()
+    if ( i == 2000):
+        movement = [1, 1, 1]
+        env.move_motors(movement)
+    env.sim.step()
+    env.render()
 
 
 # Data dict that contains the position data and the time data

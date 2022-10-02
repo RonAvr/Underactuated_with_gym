@@ -20,3 +20,4 @@ from gym.envs.mujoco.walker2d import Walker2dEnv
 from gym.envs.mujoco.example import Example
 from gym.envs.mujoco.example_with_sawyer import ExampleWithSawyer
 from gym.envs.mujoco.example_with_sawyer_with_object import ExampleWithSawyerWithObject
+from gym.envs.mujoco.calibrate import Calibrate
