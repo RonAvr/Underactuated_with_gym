@@ -42,7 +42,7 @@ env.set_reset(qpos_reset)
 
 # Number of loops the simulation going to loop through
 root_loop = 1000
-loop = 8 * root_loop
+loop = 100 * root_loop
 
 # array to store all the position data
 pos_data = []
@@ -53,9 +53,10 @@ time_data = []
 
 
 for i in range(loop):
-    if ( i == 2000):
-        movement = [1, 1, 1]
-        env.move_motors(movement)
+    if ( i == 1000):
+        x = 0.0001
+        movement = [1*x, 0, 0]
+        env.set_motor_ctrl(movement)
     env.sim.step()
     env.render()
 

@@ -1,30 +1,37 @@
 g = 0
 deg_to_rad = 0.0174532925
 
-damping = 0.00000001
-stiffness = 0.00000001
+motor_damping = 0.001
+motor_stiffness = 0.0000000001
+proximal_ref = 0
+proximal_damping = 0.001
+proximal_stiffness = 0.00000000000000000000000000001
+distal_ref = 0
+distal_damping = 0.001
+distal_stiffness = 0.00000000000000000000000000001
 
 # Motors coefficients
-motor_damping = damping
-motor_stiffness = stiffness
+motor_damping = motor_damping
+motor_stiffness = motor_stiffness
 motor_joint_range = f"{-45 * deg_to_rad} {45 * deg_to_rad}"
 motor_lower_range = -0.035
 motor_upper_range = 0.04
 
 # Swivel-proximal joint coefficients
-swivel_proximal_damping = damping
-swivel_proximal_stiffness = stiffness
+swivel_proximal_damping = proximal_damping
+swivel_proximal_stiffness = proximal_stiffness
 swivel_proximal_joint_range = f"{-45 * deg_to_rad} {45 * deg_to_rad}"
 
 # Proximal-distal joint coefficients
-proximal_distal_damping = damping
-proximal_distal_stiffness = stiffness
+proximal_distal_damping = distal_damping
+proximal_distal_stiffness = distal_stiffness
 proximal_distal_joint_range = f"{-30 * deg_to_rad} {30 * deg_to_rad}"
 
 # Tendons coefficients
 tendon_stiffness = 1000
-tendon_range = 0.1
+tendon_range = 0.15
 tendon_width = 0.001
+soliplimit = "0.02 1"
 
 # Object to grab parameters
 diameter = 0.01
@@ -59,14 +66,14 @@ MODEL_XML = f"""
 
           <!-- Creating the right arm with its motor -->
           <body name="Right motor">
-              <site name="s11" pos="0.06 0.025 0.035" size="0.0015"/>
+              <site name="s11" pos="0.06 0.025 0.04" size="0.0015"/>
               <geom name="geom1" type="sphere" pos="0.06 0.025 0.04" size="0.005"/>
               <joint name="joint_1" type="hinge" pos="0.045 0.0125 0.04" axis="0 1 0" limited="true" range="{motor_joint_range}" stiffness="{motor_stiffness}" damping="{motor_damping}"/>
           </body>
           <body name="swivel_r" pos="0.05 0.025 0.0625" euler="0 0 {30 * deg_to_rad}" >
               <geom name="swivel_r" type="mesh" mesh="swivel_1"/>
               <body name="proximal_r" pos="0.0038 0 0.0475">
-                  <joint name="swivel_proximal_r" type="hinge" axis="0 1 0" pos="0.006 0 -0.03" limited="true" range="{swivel_proximal_joint_range}" stiffness="{swivel_proximal_stiffness}" damping="{swivel_proximal_damping}"/>
+                  <joint name="swivel_proximal_r" type="hinge" axis="0 1 0" pos="0.006 0 -0.03" limited="true" range="{swivel_proximal_joint_range}" stiffness="{swivel_proximal_stiffness}" damping="{swivel_proximal_damping}" springref="{proximal_ref}" frictionloss="1"/>
                   <site name="s12" pos="0.007 0 -0.04" size="0.0015"/>
                   <geom name="12_cylinder" type="cylinder" size="0.005 0.01" pos="0.005 0 -0.029" rgba=".3 .9 .3 .4" euler="{90 * deg_to_rad} 0 0"/>
                   <site name="s131" pos="0.0035 0 -0.035" size="0.0015"/>
@@ -80,24 +87,24 @@ MODEL_XML = f"""
                   <geom name="proximal_r" type="mesh" mesh="proximal_O" pos="-0.01 -0.008 0.045" euler="{90  * deg_to_rad} {180 * deg_to_rad} {-150 * deg_to_rad}"/>
                   <site name="s16" pos="-0.014 0 0.021" size="0.0015"/>
                   <body name="distal_r" pos="-0.027 0 0.068" euler="0 {65 * deg_to_rad} 0">
-                      <joint name="proximal_distal_r" type="hinge" axis="0 1 0" pos="0.041 0 0.0025" limited="true" range="{proximal_distal_joint_range}" stiffness="{proximal_distal_stiffness}" damping="{proximal_distal_damping}"/>
+                      <joint name="proximal_distal_r" type="hinge" axis="0 1 0" pos="0.041 0 0.0025" limited="true" range="{proximal_distal_joint_range}" stiffness="{proximal_distal_stiffness}" damping="{proximal_distal_damping}" springref="{distal_ref}" frictionloss="1"/>
                       <geom name="distal_r" type="mesh" mesh="distal_O" pos="-0.015 0.015 0.015" euler="{-90 * deg_to_rad} {90 * deg_to_rad} 0"/>
                       <site name="s17" pos="0.022 0 0.009" size="0.0015"/>
-                      <site name="right_sensor" pos="-0.01 0 -0.02" size="0.015"/>
+                      <site name="right_sensor" pos="-0.01 0 -0.02" size="0.015" rgba="0 0 0 0"/>
                   </body>
               </body>
           </body>
 
            <!-- Creating the left arm with its motor -->
           <body name="Left Motor">
-              <site name="s21" pos="0.06 -0.025 0.035" size="0.0015"/>
+              <site name="s21" pos="0.06 -0.025 0.04" size="0.0015"/>
               <geom name="geom2" type="sphere" pos="0.06 -0.025 0.04" size="0.005"/>
               <joint name="joint_2" type="hinge" pos="0.045 -0.025 0.04" axis="0 1 0" limited="true" range="{motor_joint_range}" stiffness="{motor_stiffness}" damping="{motor_damping}"/>
           </body>
           <body name="swivel_l" pos="0.05 -0.025 0.0625" euler="0 0 {-30 * deg_to_rad}">
               <geom type="mesh" mesh="swivel_1"/>
               <body name="proximal_l" pos="0.0038 0 0.0475">
-                  <joint name="swivel_proximal_l" type="hinge" axis="0 1 0" pos="0.006 0 -0.03" limited="true" range="{swivel_proximal_joint_range}" stiffness="{swivel_proximal_stiffness}" damping="{swivel_proximal_damping}"/>
+                  <joint name="swivel_proximal_l" type="hinge" axis="0 1 0" pos="0.006 0 -0.03" limited="true" range="{swivel_proximal_joint_range}" stiffness="{swivel_proximal_stiffness}" damping="{swivel_proximal_damping}" springref="{proximal_ref}"/>
                   <site name="s22" pos="0.007 0 -0.04" size="0.0015"/>
                   <geom name="22_cylinder" type="cylinder" size="0.005 0.01" pos="0.005 0 -0.029" rgba=".3 .9 .3 .4" euler="{90 * deg_to_rad} 0 0"/>
                   <site name="s231" pos="0.0035 0 -0.035" size="0.0015"/>
@@ -111,10 +118,10 @@ MODEL_XML = f"""
                   <geom name="proximal_l" type="mesh" mesh="proximal_O" pos="-0.01 -0.008 0.045" euler="{90 * deg_to_rad} {180 * deg_to_rad} {-150 * deg_to_rad}"/>
                   <site name="s26" pos="-0.014 0 0.021" size="0.0015"/>
                   <body name="distal_l" pos="-0.027 0 0.068" euler="0 {65 * deg_to_rad} 0">
-                      <joint name="proximal_distal_l" type="hinge" axis="0 1 0" pos="0.041 0 0.0025" limited="true" range="{proximal_distal_joint_range}" stiffness="{proximal_distal_stiffness}" damping="{proximal_distal_damping}"/>
+                      <joint name="proximal_distal_l" type="hinge" axis="0 1 0" pos="0.041 0 0.0025" limited="true" range="{proximal_distal_joint_range}" stiffness="{proximal_distal_stiffness}" damping="{proximal_distal_damping}" springref="{distal_ref}"/>
                       <geom name="distal_l" type="mesh" mesh="distal_O" pos="-0.015 0.015 0.015" euler="{-90 * deg_to_rad} {90 * deg_to_rad} 0"/>
                       <site name="s27" pos="0.022 0 0.009" size="0.0015"/>
-                      <site name="left_sensor" pos="-0.01 0 -0.02" size="0.015"/>
+                      <site name="left_sensor" pos="-0.01 0 -0.02" size="0.015" rgba="0 0 0 0"/>
                   </body>
               </body>
           </body>
@@ -126,7 +133,7 @@ MODEL_XML = f"""
               <joint name="joint_3" type="hinge" pos="-0.045 0 0.035" axis="0 1 0" limited="true" range="{motor_joint_range}" stiffness="{motor_stiffness}" damping="{motor_damping}"/>
           </body>
           <body name="proximal_c" pos="-0.0138 0 0.1105">
-              <joint name="swivel_proximal_c" type="hinge" axis="0 1 0" pos="-0.016 -0.01 -0.029" limited="true" range="{swivel_proximal_joint_range}" stiffness="{swivel_proximal_stiffness}" damping="{swivel_proximal_damping}"/>
+              <joint name="swivel_proximal_c" type="hinge" axis="0 1 0" pos="-0.016 -0.01 -0.029" limited="true" range="{swivel_proximal_joint_range}" stiffness="{swivel_proximal_stiffness}" damping="{swivel_proximal_damping}" springref="{proximal_ref}"/>
               <geom name="35_cylinder" type="cylinder" size="0.01 0.01" pos="-0.003 0 0.032" rgba=".3 .9 .3 .4" euler="{90 * deg_to_rad} 0 0"/>
               <geom name="proximal_c" type="mesh" mesh="proximal_O" pos="0 0.008 0.045" euler="{90 * deg_to_rad} 0 {-150 * deg_to_rad}"/>
               <site name="s32" pos="-0.016 0 -0.04" size="0.0015"/>
@@ -140,17 +147,17 @@ MODEL_XML = f"""
               <geom name="34_cylinder" type="cylinder" size="0.004 0.01" pos="-0.0045 0 0.01675" rgba=".3 .9 .3 .4" euler="{90 * deg_to_rad} 0 0"/>
               <site name="s36" pos="0.0025 0 0.021" size="0.0015"/>
               <body name="distal_c" pos="0.02 0 0.066" euler="0 {120 * deg_to_rad} 0">
-                  <joint name="proximal_distal_c" type="hinge" axis="0 1 0" pos="0.041 0 -0.0025" limited="true" range="{proximal_distal_joint_range}" stiffness="{proximal_distal_stiffness}" damping="{proximal_distal_damping}"/>
+                  <joint name="proximal_distal_c" type="hinge" axis="0 1 0" pos="0.041 0 -0.0025" limited="true" range="{proximal_distal_joint_range}" stiffness="{proximal_distal_stiffness}" damping="{proximal_distal_damping}" springref="{distal_ref}"/>
                   <geom type="mesh" mesh="distal_O" pos="-0.015 -0.015 -0.015" euler="{90 * deg_to_rad} {90 * deg_to_rad} 0"/>
                   <site name="s37" pos="0.022 0 -0.01" size="0.0015"/>
-                  <site name="center_sensor" pos="-0.01 0 0.02" size="0.015"/>
+                  <site name="center_sensor" pos="-0.01 0 0.02" size="0.015" rgba="0 0 0 0"/>
               </body>
           </body>
       </body>
    </worldbody>
 
    <tendon> <!-- Creating the tendon's path according to the sites -->
-      <spatial name="tendon_r" width="{tendon_width}" rgba=".95 .3 .3 1" limited="true" range="0 {tendon_range}" stiffness="{tendon_stiffness}">
+      <spatial name="tendon_r" width="{tendon_width}" rgba=".95 .3 .3 1" limited="true" range="0 {tendon_range}" stiffness="{tendon_stiffness}" frictionloss="1" solimplimit="{soliplimit}">
           <site site="s11"/>
           <site site="s12"/>
           <site site="s131"/>
@@ -164,7 +171,7 @@ MODEL_XML = f"""
           <geom geom="15_cylinder"/>
           <site site="s17"/>
       </spatial>
-      <spatial name="tendon_l" width="{tendon_width}" rgba=".95 .3 .3 1" limited="true" range="0 {tendon_range}" stiffness="{tendon_stiffness}">
+      <spatial name="tendon_l" width="{tendon_width}" rgba=".95 .3 .3 1" limited="true" range="0 {tendon_range}" stiffness="{tendon_stiffness}" frictionloss="1" solimplimit="{soliplimit}">
           <site site="s21"/>
           <site site="s22"/>
           <site site="s231"/>
@@ -178,7 +185,7 @@ MODEL_XML = f"""
           <geom geom="25_cylinder"/>
           <site site="s27"/>
       </spatial>
-      <spatial name="tendon_c" width="{tendon_width}" rgba=".95 .3 .3 1" limited="true" range="0 {tendon_range}" stiffness="{tendon_stiffness}">
+      <spatial name="tendon_c" width="{tendon_width}" rgba=".95 .3 .3 1" limited="true" range="0 {tendon_range}" stiffness="{tendon_stiffness}" frictionloss="1" solimplimit="{soliplimit}">
           <site site="s31"/>
           <site site="s32"/>
           <site site="s331"/>

@@ -21,3 +21,6 @@ from gym.envs.mujoco.example import Example
 from gym.envs.mujoco.example_with_sawyer import ExampleWithSawyer
 from gym.envs.mujoco.example_with_sawyer_with_object import ExampleWithSawyerWithObject
 from gym.envs.mujoco.calibrate import Calibrate
+from gym.envs.mujoco.torque_control import Torque
+from gym.envs.mujoco.movement_control import Move
+

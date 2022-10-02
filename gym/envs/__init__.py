@@ -354,3 +354,17 @@ register(
     max_episode_steps=1000,
     reward_threshold=9100.0,
 )
+
+register(
+    id="Torque",
+    entry_point="gym.envs.mujoco.torque_control:Torque",
+    max_episode_steps=1000,
+    reward_threshold=9100.0,
+)
+
+register(
+    id="Move",
+    entry_point="gym.envs.mujoco.movement_control:Move",
+    max_episode_steps=1000,
+    reward_threshold=9100.0,
+)

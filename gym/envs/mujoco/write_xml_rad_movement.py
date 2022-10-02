@@ -4,16 +4,16 @@ deg_to_rad = 0.0174532925
 motor_damping = 0.0000000001
 motor_stiffness = 0.0000000001
 proximal_damping = 0.001
-proximal_stiffness = 0.00000001
+proximal_stiffness = 0.000000001
 distal_damping = 0.001
-distal_stiffness = 0.00000001
+distal_stiffness = 0.000000001
 
 # Motors coefficients
 motor_damping = motor_damping
 motor_stiffness = motor_stiffness
 motor_joint_range = f"{-45 * deg_to_rad} {45 * deg_to_rad}"
-motor_lower_range = -0.035
-motor_upper_range = 0.04
+motor_lower_range = -1
+motor_upper_range = 1
 
 # Swivel-proximal joint coefficients
 swivel_proximal_damping = proximal_damping
@@ -152,11 +152,6 @@ MODEL_XML = f"""
           </body>
       </body>
 
-    <body name="target_body">
-        <geom pos="{x_pos} {y_pos} {z_pos}" size="{diameter} {height}" type="cylinder" name="target_body"/>
-        <site name="target_body" pos="{x_pos} {y_pos} {z_pos - height}" size="0.0015"/>
-        <joint type="free"/>
-    </body>
    </worldbody>
 
    <tendon> <!-- Creating the tendon's path according to the sites -->
@@ -205,9 +200,9 @@ MODEL_XML = f"""
    </tendon>
 
    <actuator> <!-- Adding motors to the relevant joints -->
-        <motor joint="joint_1" name="swivel_proximal_r_motor" gear="1" ctrllimited="true" ctrlrange="{motor_lower_range} {motor_upper_range}"/>
+        <position joint="joint_1" name="swivel_proximal_r_motor" gear="1" ctrllimited="true" ctrlrange="{motor_lower_range} {motor_upper_range}" kp="1"/>
 
-        <motor joint="joint_2" name="swivel_proximal_l_motor" gear="1" ctrllimited="true" ctrlrange="{motor_lower_range} {motor_upper_range}"/>
+        <position joint="joint_2" name="swivel_proximal_l_motor" gear="1" ctrllimited="true" ctrlrange="{motor_lower_range} {motor_upper_range}"/>
 
         <motor joint="joint_3" name="swivel_proximal_c_motor" gear="1" ctrllimited="true" ctrlrange="{motor_lower_range} {motor_upper_range}"/>
     </actuator>
@@ -235,7 +230,7 @@ MODEL_XML = f"""
 
 """
 
-with open("./assets/torque.xml", "w") as f:
+with open("./assets/movement.xml", "w") as f:
     f.write(MODEL_XML)
 
 f.close()

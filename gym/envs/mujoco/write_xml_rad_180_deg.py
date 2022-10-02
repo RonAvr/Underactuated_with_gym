@@ -1,24 +1,28 @@
 g = 0
 deg_to_rad = 0.0174532925
 
-damping = 0.00001
-stiffness = 0.00001
+motor_damping = 0.0000000001
+motor_stiffness = 0.0000000001
+proximal_damping = 0.001
+proximal_stiffness = 0.00000001
+distal_damping = 0.001
+distal_stiffness = 0.00000001
 
 # Motors coefficients
-motor_damping = damping
-motor_stiffness = stiffness
+motor_damping = motor_damping
+motor_stiffness = motor_stiffness
 motor_joint_range = f"{-45 * deg_to_rad} {45 * deg_to_rad}"
 motor_lower_range = -0.035
 motor_upper_range = 0.04
 
 # Swivel-proximal joint coefficients
-swivel_proximal_damping = damping
-swivel_proximal_stiffness = stiffness
+swivel_proximal_damping = proximal_damping
+swivel_proximal_stiffness = proximal_stiffness
 swivel_proximal_joint_range = f"{-45 * deg_to_rad} {45 * deg_to_rad}"
 
 # Proximal-distal joint coefficients
-proximal_distal_damping = damping
-proximal_distal_stiffness = stiffness
+proximal_distal_damping = distal_damping
+proximal_distal_stiffness = distal_stiffness
 proximal_distal_joint_range = f"{-30 * deg_to_rad} {30 * deg_to_rad}"
 
 # Tendons coefficients
@@ -59,7 +63,7 @@ MODEL_XML = f"""
 
           <!-- Creating the right arm with its motor -->
           <body name="Right motor">
-              <site name="s11" pos="0.06 0.025 0.035" size="0.0015"/>
+              <site name="s11" pos="0.06 0.025 0.04" size="0.0015"/>
               <geom name="geom1" type="sphere" pos="0.06 0.025 0.04" size="0.005"/>
               <joint name="joint_1" type="hinge" pos="0.045 0.0125 0.04" axis="0 1 0" limited="true" range="{motor_joint_range}" stiffness="{motor_stiffness}" damping="{motor_damping}"/>
           </body>
@@ -83,14 +87,14 @@ MODEL_XML = f"""
                       <joint name="proximal_distal_r" type="hinge" axis="0 1 0" pos="0.041 0 0.0025" limited="true" range="{proximal_distal_joint_range}" stiffness="{proximal_distal_stiffness}" damping="{proximal_distal_damping}"/>
                       <geom name="distal_r" type="mesh" mesh="distal_O" pos="-0.015 0.015 0.015" euler="{-90 * deg_to_rad} {90 * deg_to_rad} 0"/>
                       <site name="s17" pos="0.022 0 0.009" size="0.0015"/>
-                      <site name="right_sensor" pos="-0.01 0 -0.02" size="0.015"/>
+                      <site name="right_sensor" pos="-0.01 0 -0.02" size="0.015" rgba="0 0 0 0"/>
                   </body>
               </body>
           </body>
 
            <!-- Creating the left arm with its motor -->
           <body name="Left Motor">
-              <site name="s21" pos="0.06 -0.025 0.035" size="0.0015"/>
+              <site name="s21" pos="0.06 -0.025 0.04" size="0.0015"/>
               <geom name="geom2" type="sphere" pos="0.06 -0.025 0.04" size="0.005"/>
               <joint name="joint_2" type="hinge" pos="0.045 -0.025 0.04" axis="0 1 0" limited="true" range="{motor_joint_range}" stiffness="{motor_stiffness}" damping="{motor_damping}"/>
           </body>
@@ -114,7 +118,7 @@ MODEL_XML = f"""
                       <joint name="proximal_distal_l" type="hinge" axis="0 1 0" pos="0.041 0 0.0025" limited="true" range="{proximal_distal_joint_range}" stiffness="{proximal_distal_stiffness}" damping="{proximal_distal_damping}"/>
                       <geom name="distal_l" type="mesh" mesh="distal_O" pos="-0.015 0.015 0.015" euler="{-90 * deg_to_rad} {90 * deg_to_rad} 0"/>
                       <site name="s27" pos="0.022 0 0.009" size="0.0015"/>
-                      <site name="left_sensor" pos="-0.01 0 -0.02" size="0.015"/>
+                      <site name="left_sensor" pos="-0.01 0 -0.02" size="0.015" rgba="0 0 0 0"/>
                   </body>
               </body>
           </body>
@@ -143,7 +147,7 @@ MODEL_XML = f"""
                   <joint name="proximal_distal_c" type="hinge" axis="0 1 0" pos="0.041 0 -0.0025" limited="true" range="{proximal_distal_joint_range}" stiffness="{proximal_distal_stiffness}" damping="{proximal_distal_damping}"/>
                   <geom type="mesh" mesh="distal_O" pos="-0.015 -0.015 -0.015" euler="{90 * deg_to_rad} {90 * deg_to_rad} 0"/>
                   <site name="s37" pos="0.022 0 -0.01" size="0.0015"/>
-                  <site name="center_sensor" pos="-0.01 0 0.02" size="0.015"/>
+                  <site name="center_sensor" pos="-0.01 0 0.02" size="0.015" rgba="0 0 0 0"/>
               </body>
           </body>
       </body>

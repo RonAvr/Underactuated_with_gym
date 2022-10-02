@@ -6,7 +6,7 @@ from gym.envs.mujoco import MuJocoPyEnv
 from gym.spaces import Box
 
 
-class Calibrate(MuJocoPyEnv, utils.EzPickle):
+class Torque(MuJocoPyEnv, utils.EzPickle):
     metadata = {
         "render_modes": [
             "human",
@@ -23,7 +23,7 @@ class Calibrate(MuJocoPyEnv, utils.EzPickle):
             low=-np.inf, high=np.inf, shape=(111,), dtype=np.float64
         )
         MuJocoPyEnv.__init__(
-            self, "calibrate.xml", 5, observation_space=observation_space, **kwargs
+            self, "torque.xml", 5, observation_space=observation_space, **kwargs
         )
         utils.EzPickle.__init__(self)
 
@@ -164,9 +164,10 @@ class Calibrate(MuJocoPyEnv, utils.EzPickle):
         if (len(ctrl) != 3):
             raise ValueError('The ctrl array must be at size of 3')
 
-        self.sim.data.ctrl[0] = ctrl[0]
-        self.sim.data.ctrl[1] = ctrl[1]
-        self.sim.data.ctrl[2] = ctrl[2]
+        calibration = 0.000001
+        self.sim.data.ctrl[0] = calibration * ctrl[0]
+        self.sim.data.ctrl[1] = calibration * ctrl[1]
+        self.sim.data.ctrl[2] = calibration * ctrl[2]
 
     def get_sensor_data(self):
         return self.sim.data.sensordata
@@ -189,12 +190,11 @@ class Calibrate(MuJocoPyEnv, utils.EzPickle):
         return
 
     def move_motors(self, movement):
-        first_movement = 0.000001 * np.array(movement)
-        second_movement = -1 * np.array(first_movement)
+        movement = 0.0001 * np.array(movement)
         zeros = [0,0,0]
-        self.set_motor_ctrl(first_movement)
+        self.set_motor_ctrl(movement)
         self.sim.step()
         self.render()
-        # self.set_motor_ctrl(zeros)
-        # self.sim.step()
-        # self.render()
+        self.set_motor_ctrl(zeros)
+        self.sim.step()
+        self.render()
