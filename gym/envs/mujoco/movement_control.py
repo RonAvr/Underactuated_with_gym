@@ -4,6 +4,7 @@ import sys
 from gym import utils
 from gym.envs.mujoco import MuJocoPyEnv
 from gym.spaces import Box
+from scipy.spatial.transform import Rotation as R
 
 
 class Move(MuJocoPyEnv, utils.EzPickle):
@@ -138,20 +139,26 @@ class Move(MuJocoPyEnv, utils.EzPickle):
         tol = sys.float_info.epsilon * 10
         xmat = self.sim.data.get_geom_xmat(body_name)
 
-        if abs(xmat[0, 0]) < tol and abs(xmat[1, 0]) < tol:
-            eul1 = 0
-            eul2 = math.atan2(-xmat[2, 0], xmat[0, 0])
-            eul3 = math.atan2(-xmat[1, 2], xmat[1, 1])
-        else:
-            eul1 = math.atan2(xmat[1, 0], xmat[0, 0])
-            sp = math.sin(eul1)
-            cp = math.cos(eul1)
-            eul2 = math.atan2(-xmat[2, 0], cp * xmat[0, 0] + sp * xmat[1, 0])
-            eul3 = math.atan2(sp * xmat[0, 2] - cp * xmat[1, 2], cp * xmat[1, 1] - sp * xmat[0, 1])
+        r = R.from_matrix(xmat)
 
-        rpy = [eul1, eul2, eul3]
+        r = r.as_quat()
 
-        return rpy
+        return r
+
+        # if abs(xmat[0, 0]) < tol and abs(xmat[1, 0]) < tol:
+        #     eul1 = 0
+        #     eul2 = math.atan2(-xmat[2, 0], xmat[0, 0])
+        #     eul3 = math.atan2(-xmat[1, 2], xmat[1, 1])
+        # else:
+        #     eul1 = math.atan2(xmat[1, 0], xmat[0, 0])
+        #     sp = math.sin(eul1)
+        #     cp = math.cos(eul1)
+        #     eul2 = math.atan2(-xmat[2, 0], cp * xmat[0, 0] + sp * xmat[1, 0])
+        #     eul3 = math.atan2(sp * xmat[0, 2] - cp * xmat[1, 2], cp * xmat[1, 1] - sp * xmat[0, 1])
+        #
+        # rpy = [eul1, eul2, eul3]
+        #
+        # return rpy
 
     def set_motor_ctrl(self, ctrl):
         """
@@ -164,10 +171,10 @@ class Move(MuJocoPyEnv, utils.EzPickle):
         if (len(ctrl) != 3):
             raise ValueError('The ctrl array must be at size of 3')
 
-        calibration = 0.000001
-        self.sim.data.ctrl[0] = calibration * ctrl[0]
-        self.sim.data.ctrl[1] = calibration * ctrl[1]
-        self.sim.data.ctrl[2] = calibration * ctrl[2]
+        calibration = 0.01
+        self.sim.data.ctrl[0] += calibration * ctrl[0]
+        self.sim.data.ctrl[1] += calibration * ctrl[1]
+        self.sim.data.ctrl[2] += calibration * ctrl[2]
 
 
     def new_step(self):
@@ -177,10 +184,10 @@ class Move(MuJocoPyEnv, utils.EzPickle):
         return self.sim.data.sensordata
 
     def close_fingers(self):
-        right_motor = 0.0001
-        left_motor = 0.0001
-        center_motor = 0.0001
-        while(bool(right_motor and left_motor and center_motor)):
+        right_motor = 0.01
+        left_motor = 0.01
+        center_motor = 0.001
+        while(bool(right_motor or left_motor or center_motor)):
             sensor_data = self.get_sensor_data()
             if(sensor_data[0] != 0):
                 right_motor = 0
@@ -188,6 +195,7 @@ class Move(MuJocoPyEnv, utils.EzPickle):
                 left_motor = 0
             if(sensor_data[2] != 0):
                 center_motor = 0
+            self.set_motor_ctrl([right_motor, left_motor, center_motor])
             self.sim.step()
             self.render()
 

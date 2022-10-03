@@ -34,7 +34,7 @@ tendon_width = 0.001
 diameter = 0.01
 height = 0.07
 center_off_body_z = 0.21
-x_pos = 0.02
+x_pos = 0.025
 y_pos = 0
 z_pos = center_off_body_z - height / 2
 
@@ -151,7 +151,11 @@ MODEL_XML = f"""
               </body>
           </body>
       </body>
-
+    <body name="target_body">
+        <geom pos="{x_pos} {y_pos} {z_pos}" size="{diameter} {height}" type="cylinder" name="target_body"/>
+        <site name="target_body" pos="{x_pos} {y_pos} {z_pos - height}" size="0.0015"/>
+        <joint type="free"/>
+    </body>
    </worldbody>
 
    <tendon> <!-- Creating the tendon's path according to the sites -->
