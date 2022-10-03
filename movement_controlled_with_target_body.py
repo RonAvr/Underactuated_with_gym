@@ -31,7 +31,7 @@ time_data = []
 env.close_fingers()
 
 for i in range(loop):
-
+    save_data()
     if (i%root_loop == 0):
         # Activating the motors
         env.set_motor_ctrl([1,1,1])

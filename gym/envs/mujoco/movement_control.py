@@ -116,7 +116,7 @@ class Move(MuJocoPyEnv, utils.EzPickle):
 
     def get_body_pos(self, body_name):
         # The reference position where the camera is located
-        ref_pos = [0.02, 0, 0.0625]
+        ref_pos = [0.025, 0, 0.0625]
 
         # Getting the site position which located at the bottom of the target body
         site_pos = self.sim.data.get_site_xpos(body_name)
@@ -125,12 +125,12 @@ class Move(MuJocoPyEnv, utils.EzPickle):
         rpy = self.calc_rpy(body_name)
 
         # absolute x,y,z position
-        abs_pos = site_pos - ref_pos
+        rel_pos = site_pos - ref_pos
 
         # adding the roll pitch and yaw to the array
-        abs_pos = np.append(abs_pos, rpy)
+        rel_pos = np.append(rel_pos, rpy)
 
-        return abs_pos
+        return rel_pos
 
     def calc_rpy(self, body_name):
         # A function to convert orientation matrix to rpy
