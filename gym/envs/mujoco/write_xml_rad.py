@@ -235,7 +235,7 @@ MODEL_XML = f"""
 
 """
 
-with open("./assets/torque.xml", "w") as f:
+with open("./assets/example.xml", "w") as f:
     f.write(MODEL_XML)
 
 f.close()

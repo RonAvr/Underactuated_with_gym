@@ -114,29 +114,42 @@ class Move(MuJocoPyEnv, utils.EzPickle):
             ]
         )
 
+    def get_actuators_data(self):
+        actuator_force = self.sim.data.actuator_force.tolist()
+        actuator_length = self.sim.data.actuator_length.tolist()
+        actuator_moment = self.sim.data.actuator_moment.tolist()
+        actuator_velocity = self.sim.data.actuator_velocity.tolist()
+        actuators_data = {
+            'actuator_force' : actuator_force,
+            'actuator_length' : actuator_length,
+            'actuator_moment' : actuator_moment,
+            'actuator_velocity' : actuator_velocity
+        }
+
+        return actuators_data
+
     def get_body_pos(self, body_name):
         # The reference position where the camera is located
-        ref_pos = [0.025, 0, 0.0625]
+        ref_pos = self.sim.data.get_site_xpos('camera_pos')
+        # ref_pos = [0.025, 0, 0.0625]
 
         # Getting the site position which located at the bottom of the target body
         site_pos = self.sim.data.get_site_xpos(body_name)
 
         # Getting the roll pitch and yaw of the body
-        rpy = self.calc_rpy(body_name)
+        quat = self.calc_quat(body_name)
 
-        # absolute x,y,z position
+        # relative x,y,z position
         rel_pos = site_pos - ref_pos
 
-        # adding the roll pitch and yaw to the array
-        rel_pos = np.append(rel_pos, rpy)
+        # adding the quat to the x,y,z position
+        quat = list(quat)
+        rel_pos = list(rel_pos)
+        rel_pos.append(quat)
 
         return rel_pos
 
-    def calc_rpy(self, body_name):
-        # A function to convert orientation matrix to rpy
-        # https://www.meccanismocomplesso.org/en/3d-rotations-and-euler-angles-in-python/
-
-        tol = sys.float_info.epsilon * 10
+    def calc_quat(self, body_name):
         xmat = self.sim.data.get_geom_xmat(body_name)
 
         r = R.from_matrix(xmat)
@@ -175,7 +188,6 @@ class Move(MuJocoPyEnv, utils.EzPickle):
         self.sim.data.ctrl[0] += calibration * ctrl[0]
         self.sim.data.ctrl[1] += calibration * ctrl[1]
         self.sim.data.ctrl[2] += calibration * ctrl[2]
-
 
     def new_step(self):
         self.sim.step()

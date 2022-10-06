@@ -30,6 +30,11 @@ tendon_stiffness = 1000
 tendon_range = 0.1
 tendon_width = 0.001
 
+# camera pos
+camera_x = 0.025
+camera_y = 0
+camera_z = 0.0625
+
 # Object to grab parameters
 diameter = 0.01
 height = 0.07
@@ -59,6 +64,7 @@ MODEL_XML = f"""
       <light diffuse="1 1 1" pos="0 0 300" dir="0 0 -1"/>
 
       <body name="base_link">
+          <site name="camera_pos" pos="{camera_x} {camera_y} {camera_z}" size="0.0015"/>
           <geom type="mesh" mesh="base_link"/>
 
           <!-- Creating the right arm with its motor -->

@@ -1,54 +1,127 @@
 import json
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.spatial.transform import Rotation as R
 
 RAD_TO_DEG = 57.2957795
+
+
+def quat_to_rpy(quat, pos):
+    """
+
+    Args:
+        quat: a quat array
+        pos: 1 - for roll, 2 - for pitch, 3 - for yaw
+
+    Returns: return roll/pitch/yaw in degrees
+
+    """
+    r = R.from_quat(quat)
+    s = r.as_rotvec(degrees=True)
+    return(s[pos])
+
+
+def show_pos_data():
+    fig, axs = plt.subplots(2, 3)
+    axs[0, 0].plot(x_pos)
+    axs[0, 0].grid()
+    axs[0, 0].set(ylabel='position, mm')
+    axs[0, 0].set_title('x position')
+
+    axs[0, 1].plot(y_pos)
+    axs[0, 1].grid()
+    axs[0, 1].set_title('y position')
+
+    axs[0, 2].plot(z_pos)
+    axs[0, 2].grid()
+    axs[0, 2].set_title('z position')
+
+    axs[1, 0].plot(roll)
+    axs[1, 0].grid()
+    axs[1, 0].set(ylabel='deg')
+    axs[1, 0].set_title('roll')
+
+    axs[1, 1].plot(pitch)
+    axs[1, 1].grid()
+    axs[1, 1].set_title('pitch')
+
+    axs[1, 2].plot(yaw)
+    axs[1, 2].grid()
+    axs[1, 2].set_title('yaw')
+
+    plt.show()
+
+
+def show_actuator_data():
+    fig, axs = plt.subplots(3, 3)
+
+    # Actuators force sub-plot
+    axs[0, 0].plot(right_actuator_force)
+    axs[0, 0].grid()
+    axs[0, 0].set(ylabel='Force, N')
+    axs[0, 0].set_title('Right Motor')
+
+    axs[0, 1].plot(left_actuator_force)
+    axs[0, 1].grid()
+    axs[0, 1].set_title('Left Motor')
+
+    axs[0, 2].plot(center_actuator_force)
+    axs[0, 2].grid()
+    axs[0, 2].set_title('Center Motor')
+    #---------------------------------#
+
+    # Actuators length sub-plot
+    axs[1, 0].plot(right_actuator_length)
+    axs[1, 0].grid()
+    axs[1, 0].set(ylabel='length, mm')
+
+    axs[1, 1].plot(left_actuator_length )
+    axs[1, 1].grid()
+
+    axs[1, 2].plot(center_actuator_length )
+    axs[1, 2].grid()
+    # ---------------------------------#
+    # Actuators velocity sub-plot
+    axs[2, 0].plot(right_actuator_velocity)
+    axs[2, 0].grid()
+    axs[2, 0].set(ylabel='Velocity, m/sec')
+
+    axs[2, 1].plot(left_actuator_velocity)
+    axs[2, 1].grid()
+
+    axs[2, 2].plot(center_actuator_velocity)
+    axs[2, 2].grid()
+
+    plt.show()
 
 # Loading the data.json file and extracting the pos and time data
 f = open('data.json')
 data = json.load(f)
 pos_data = data['pos_data']
+actuators_data = data['actuators_data']
 time = data['time_data']
 
-# Extracting the data from the data.json file
-x_pos = list(map(lambda x:x[0], pos_data))
-y_pos = list(map(lambda x:x[1], pos_data))
-z_pos = list(map(lambda x:x[2], pos_data))
-roll = list(map(lambda x:x[3] * RAD_TO_DEG, pos_data))
-pitch = list(map(lambda x:x[4] * RAD_TO_DEG, pos_data))
-yaw = list(map(lambda x:x[5] * RAD_TO_DEG, pos_data))
-quat = list(map(lambda x:x[6] * RAD_TO_DEG, pos_data))
+# Extracting the position data from the data.json file
+x_pos = list(map(lambda x:x[0]*1000, pos_data))
+y_pos = list(map(lambda x:x[1]*1000, pos_data))
+z_pos = list(map(lambda x:x[2]*1000, pos_data))
+roll = list(map(lambda x:quat_to_rpy(x[3],0)  , pos_data))
+pitch = list(map(lambda x:quat_to_rpy(x[3],1) , pos_data))
+yaw = list(map(lambda x:quat_to_rpy(x[3],2) , pos_data))
 
-fig, axs = plt.subplots(3, 3)
-axs[0,0].plot(x_pos)
-axs[0,0].grid()
-axs[0,0].set(ylabel='position, mm')
-axs[0,0].set_title('x position')
+# Extracting the actuators data from the data.json file
+# Data of the right actuator
+right_actuator_force = list(map(lambda x:x['actuator_force'][0], actuators_data))
+right_actuator_length = list(map(lambda x:x['actuator_length'][0] * 1000, actuators_data))
+right_actuator_velocity = list(map(lambda x:x['actuator_velocity'][0], actuators_data))
+# Data of the left actuator
+left_actuator_force = list(map(lambda x:x['actuator_force'][1], actuators_data))
+left_actuator_length = list(map(lambda x:x['actuator_length'][1] * 1000, actuators_data))
+left_actuator_velocity = list(map(lambda x:x['actuator_velocity'][1], actuators_data))
+# Data of the center actuator
+center_actuator_force = list(map(lambda x:x['actuator_force'][2], actuators_data))
+center_actuator_length = list(map(lambda x:x['actuator_length'][2] * 1000, actuators_data))
+center_actuator_velocity = list(map(lambda x:x['actuator_velocity'][2], actuators_data))
 
-axs[0,1].plot(y_pos)
-axs[0,1].grid()
-axs[0,1].set_title('y position')
-
-axs[0,2].plot(z_pos)
-axs[0,2].grid()
-axs[0,2].set_title('z position')
-
-axs[1,0].plot(roll)
-axs[1,0].grid()
-axs[1,0].set(ylabel='deg')
-axs[1,0].set_title('roll')
-
-axs[1,1].plot(pitch)
-axs[1,1].grid()
-axs[1,1].set_title('pitch')
-
-axs[1,2].plot(yaw)
-axs[1,2].grid()
-axs[1,2].set_title('yaw')
-
-axs[2,0].plot(quat)
-axs[2,0].grid()
-axs[2,0].set(ylabel='deg')
-axs[2,0].set_title('quat')
-
-plt.show()
+show_pos_data()
+show_actuator_data()
