@@ -152,6 +152,8 @@ center_actuator_force = list(map(lambda x:x['actuator_force'][2], actuators_data
 center_actuator_length = list(map(lambda x:x['actuator_length'][2] * 1000, actuators_data))
 center_actuator_velocity = list(map(lambda x:x['actuator_velocity'][2], actuators_data))
 
+
+# Extracting the joints data from the data.json file
 right_proximal_joint_pos = list(map(lambda x:x['right_proximal'][0] * RAD_TO_DEG, joints_data))
 right_proximal_joint_vel = list(map(lambda x:x['right_proximal'][1], joints_data))
 right_distal_joint_pos = list(map(lambda x:x['right_distal'][0] * RAD_TO_DEG, joints_data))

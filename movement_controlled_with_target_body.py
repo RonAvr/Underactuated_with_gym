@@ -26,7 +26,7 @@ qpos_reset = np.array([ 0, 0.17, 0, 0, 0.17, 0, 0, -0.17, 0, 0, 0, 0, 0, 0, 0, 0
 env.set_reset(qpos_reset)
 
 # Number of loops the simulation going to loop through
-root_loop = 2
+root_loop = 50
 loop = 2 * root_loop
 
 # array to store all the position data
