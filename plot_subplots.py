@@ -94,11 +94,40 @@ def show_actuator_data():
 
     plt.show()
 
+
+def show_joints_data():
+    fig, axs = plt.subplots(3, 2)
+    axs[0, 0].plot(right_proximal_joint_pos)
+    axs[0, 0].grid()
+    axs[0, 0].set(ylabel='Angle, Degrees')
+    axs[0, 0].set_title('Proximal')
+
+    axs[0, 1].plot(right_distal_joint_pos)
+    axs[0, 1].grid()
+    axs[0, 1].set_title('Distal')
+
+    axs[1, 0].plot(left_proximal_joint_pos)
+    axs[1, 0].grid()
+    axs[1, 0].set(ylabel='Angle, Degrees')
+
+    axs[1, 1].plot(left_distal_joint_pos)
+    axs[1, 1].grid()
+
+    axs[2, 0].plot(center_proximal_joint_pos)
+    axs[2, 0].grid()
+    axs[2, 0].set(ylabel='Angle, Degrees')
+
+    axs[2, 1].plot(center_distal_joint_pos)
+    axs[2, 1].grid()
+
+    plt.show()
+
 # Loading the data.json file and extracting the pos and time data
 f = open('data.json')
 data = json.load(f)
 pos_data = data['pos_data']
 actuators_data = data['actuators_data']
+joints_data = data['joints_data']
 time = data['time_data']
 
 # Extracting the position data from the data.json file
@@ -123,5 +152,21 @@ center_actuator_force = list(map(lambda x:x['actuator_force'][2], actuators_data
 center_actuator_length = list(map(lambda x:x['actuator_length'][2] * 1000, actuators_data))
 center_actuator_velocity = list(map(lambda x:x['actuator_velocity'][2], actuators_data))
 
+right_proximal_joint_pos = list(map(lambda x:x['right_proximal'][0] * RAD_TO_DEG, joints_data))
+right_proximal_joint_vel = list(map(lambda x:x['right_proximal'][1], joints_data))
+right_distal_joint_pos = list(map(lambda x:x['right_distal'][0] * RAD_TO_DEG, joints_data))
+right_distal_joint_vel = list(map(lambda x:x['right_distal'][1], joints_data))
+
+left_proximal_joint_pos = list(map(lambda x:x['left_proximal'][0] * RAD_TO_DEG, joints_data))
+left_proximal_joint_vel = list(map(lambda x:x['left_proximal'][1], joints_data))
+left_distal_joint_pos = list(map(lambda x:x['left_distal'][0] * RAD_TO_DEG, joints_data))
+left_distal_joint_vel = list(map(lambda x:x['left_distal'][1], joints_data))
+
+center_proximal_joint_pos = list(map(lambda x:x['center_proximal'][0] * RAD_TO_DEG, joints_data))
+center_proximal_joint_vel = list(map(lambda x:x['center_proximal'][1], joints_data))
+center_distal_joint_pos = list(map(lambda x:x['center_distal'][0] * RAD_TO_DEG, joints_data))
+center_distal_joint_vel = list(map(lambda x:x['center_distal'][1], joints_data))
+
 show_pos_data()
 show_actuator_data()
+show_joints_data()

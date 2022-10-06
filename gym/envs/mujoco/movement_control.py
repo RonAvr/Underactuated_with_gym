@@ -128,6 +128,37 @@ class Move(MuJocoPyEnv, utils.EzPickle):
 
         return actuators_data
 
+    def get_joints_data(self):
+        # Getting right joins vel and pos
+        proximal_right_joint_pos = self.sim.data.get_joint_qpos('swivel_proximal_r')
+        proximal_right_joint_vel = self.sim.data.get_joint_qvel('swivel_proximal_r')
+        distal_right_joint_pos = self.sim.data.get_joint_qpos('proximal_distal_r')
+        distal_right_joint_vel = self.sim.data.get_joint_qvel('proximal_distal_r')
+
+        # Getting left joins vel and pos
+        proximal_left_joint_pos = self.sim.data.get_joint_qpos('swivel_proximal_l')
+        proximal_left_joint_vel = self.sim.data.get_joint_qvel('swivel_proximal_l')
+        distal_left_joint_pos = self.sim.data.get_joint_qpos('proximal_distal_l')
+        distal_left_joint_vel = self.sim.data.get_joint_qvel('proximal_distal_l')
+
+        # Getting center joins vel and pos
+        proximal_center_joint_pos = self.sim.data.get_joint_qpos('swivel_proximal_c')
+        proximal_center_joint_vel = self.sim.data.get_joint_qvel('swivel_proximal_c')
+        distal_center_joint_pos = self.sim.data.get_joint_qpos('proximal_distal_c')
+        distal_center_joint_vel = self.sim.data.get_joint_qvel('proximal_distal_c')
+
+        joints_data = {
+            'right_proximal' : [proximal_right_joint_pos, proximal_right_joint_vel],
+            'right_distal' : [distal_right_joint_pos, distal_right_joint_vel],
+            'left_proximal' : [proximal_left_joint_pos, proximal_left_joint_vel],
+            'left_distal' : [distal_left_joint_pos, distal_left_joint_vel],
+            'center_proximal' : [proximal_center_joint_pos, proximal_center_joint_vel],
+            'center_distal' : [distal_center_joint_pos, distal_center_joint_vel]
+        }
+
+        return joints_data
+
+
     def get_body_pos(self, body_name):
         # The reference position where the camera is located
         ref_pos = self.sim.data.get_site_xpos('camera_pos')
