@@ -240,7 +240,7 @@ class Move(MuJocoPyEnv, utils.EzPickle):
                 center_motor = 0
             self.set_motor_ctrl([right_motor, left_motor, center_motor])
             self.sim.step()
-            self.render()
+            # self.render()
 
         return
 
