@@ -24,7 +24,7 @@ class Move(MuJocoPyEnv, utils.EzPickle):
             low=-np.inf, high=np.inf, shape=(111,), dtype=np.float64
         )
         MuJocoPyEnv.__init__(
-            self, "movement.xml", 5, observation_space=observation_space, **kwargs
+            self, "movement_elipsoid.xml", 5, observation_space=observation_space, **kwargs
         )
         utils.EzPickle.__init__(self)
 

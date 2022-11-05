@@ -27,7 +27,7 @@ env.set_reset(qpos_reset)
 
 # Number of loops the simulation going to loop through
 root_loop = 50
-loop = 2 * root_loop
+loop = 3 * root_loop
 
 # array to store all the position data
 pos_data = []
@@ -41,14 +41,7 @@ env.close_fingers()
 for i in range(loop):
 
     save_data()
-    # if (i%root_loop == 0):
-    #     # Activating the motors
-    #     env.set_motor_ctrl([1,1,1])
-    #     print(env.sim.data.ctrl)
-
-    env.set_motor_ctrl([1,1,1])
-
-    print(env.sim.data.ten_wrapadr)
+    env.set_motor_ctrl([0.3,0.3,0.3])
 
     # Taking a step and rendering the environment
     env.sim.step()
@@ -63,6 +56,6 @@ data = {
 }
 
 # Saving the data into json file
-with open('data.json', 'w', encoding='utf-8') as f:
+with open('PE5.json', 'w', encoding='utf-8') as f:
     json.dump(data, f, ensure_ascii=False, indent=4)
 

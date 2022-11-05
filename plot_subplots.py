@@ -5,6 +5,7 @@ from scipy.spatial.transform import Rotation as R
 
 RAD_TO_DEG = 57.2957795
 
+data_file = 'PB2.json'
 
 def quat_to_rpy(quat, pos):
     """
@@ -120,10 +121,16 @@ def show_joints_data():
     axs[2, 1].plot(center_distal_joint_pos)
     axs[2, 1].grid()
 
+    rows = ['Right Arm Joints', 'Left Arm Joints', 'Center Arm Joints']
+    pad = 5  # in points
+    for ax, row in zip(axs[:, 0], rows):
+        ax.annotate(row, xy=(0, 0.5), xytext=(-ax.yaxis.labelpad - pad, 0),
+                    xycoords=ax.yaxis.label, textcoords='offset points',
+                    size='large', ha='right', va='center')
     plt.show()
 
 # Loading the data.json file and extracting the pos and time data
-f = open('data.json')
+f = open(data_file)
 data = json.load(f)
 pos_data = data['pos_data']
 actuators_data = data['actuators_data']

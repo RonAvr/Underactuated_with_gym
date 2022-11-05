@@ -113,8 +113,8 @@
           </body>
       </body>
     <body name="target_body">
-        <geom pos="0.025 0 0.175" size="0.01 0.07" type="cylinder" name="target_body"/>
-        <site name="target_body" pos="0.025 0 0.10499999999999998" size="0.0015"/>
+        <geom pos="0.018 0 0.175" size="0.005 0.01 0.07" type="box" name="target_body"/>
+        <site name="target_body" pos="0.018 0 0.10499999999999998" size="0.0015"/>
         <joint type="free"/>
     </body>
    </worldbody>
@@ -176,11 +176,13 @@
         <exclude name="exclude1" body1="proximal_c" body2="base_link"/>
         <exclude name="exclude2" body1="Center Motor" body2="base_link"/>
         <exclude name="exclude3" body1="Left Motor" body2="base_link"/>
+
         <exclude name="exclude5" body1="swivel_l" body2="base_link"/>
         <exclude name="exclude6" body1="swivel_r" body2="base_link"/>
         <exclude name="exclude7" body1="proximal_r" body2="swivel_r"/>
         <exclude name="exclude8" body1="proximal_l" body2="swivel_l"/>
         <exclude name="exclude9" body1="Right motor" body2="base_link"/>
+
     </contact>
     
     <sensor>
