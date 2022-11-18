@@ -19,6 +19,7 @@
       <light diffuse="1 1 1" pos="0 0 300" dir="0 0 -1"/>
 
       <body name="base_link">
+          <site name="camera_pos" pos="0.025 0 0.0625" size="0.0015"/>
           <geom type="mesh" mesh="base_link"/>
 
           <!-- Creating the right arm with its motor -->

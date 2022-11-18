@@ -39,13 +39,12 @@ time_data = []
 env.close_fingers()
 
 for i in range(loop):
-    print(i)
     save_data()
     env.set_motor_ctrl([3, 3, 3])
 
     # Taking a step and rendering the environment
     env.sim.step()
-    env.render()
+    # env.render()
 
 # Data dict that contains the position data and the time data
 data = {
@@ -56,6 +55,6 @@ data = {
 }
 
 # Saving the data into json file
-with open('TE5.json', 'w', encoding='utf-8') as f:
+with open('TB5.json', 'w', encoding='utf-8') as f:
     json.dump(data, f, ensure_ascii=False, indent=4)
 

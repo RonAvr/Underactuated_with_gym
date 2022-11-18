@@ -4,6 +4,7 @@ import sys
 from gym import utils
 from gym.envs.mujoco import MuJocoPyEnv
 from gym.spaces import Box
+from scipy.spatial.transform import Rotation as R
 
 
 class Torque(MuJocoPyEnv, utils.EzPickle):
@@ -23,7 +24,7 @@ class Torque(MuJocoPyEnv, utils.EzPickle):
             low=-np.inf, high=np.inf, shape=(111,), dtype=np.float64
         )
         MuJocoPyEnv.__init__(
-            self, "torque_ellipsoid.xml", 5, observation_space=observation_space, **kwargs
+            self, "torque_box.xml", 5, observation_space=observation_space, **kwargs
         )
         utils.EzPickle.__init__(self)
 
@@ -59,6 +60,15 @@ class Torque(MuJocoPyEnv, utils.EzPickle):
                 reward_survive=survive_reward,
             ),
         )
+
+    def calc_quat(self, body_name):
+        xmat = self.sim.data.get_geom_xmat(body_name)
+
+        r = R.from_matrix(xmat)
+
+        r = r.as_quat()
+
+        return r
 
     def _get_obs(self):
         return np.concatenate(
@@ -115,21 +125,24 @@ class Torque(MuJocoPyEnv, utils.EzPickle):
 
     def get_body_pos(self, body_name):
         # The reference position where the camera is located
-        ref_pos = [0.02, 0, 0.0625]
+        ref_pos = self.sim.data.get_site_xpos('camera_pos')
+        # ref_pos = [0.025, 0, 0.0625]
 
         # Getting the site position which located at the bottom of the target body
         site_pos = self.sim.data.get_site_xpos(body_name)
 
         # Getting the roll pitch and yaw of the body
-        rpy = self.calc_rpy(body_name)
+        quat = self.calc_quat(body_name)
 
-        # absolute x,y,z position
-        abs_pos = site_pos - ref_pos
+        # relative x,y,z position
+        rel_pos = site_pos - ref_pos
 
-        # adding the roll pitch and yaw to the array
-        abs_pos = np.append(abs_pos, rpy)
+        # adding the quat to the x,y,z position
+        quat = list(quat)
+        rel_pos = list(rel_pos)
+        rel_pos.append(quat)
 
-        return abs_pos
+        return rel_pos
 
     def calc_rpy(self, body_name):
         # A function to convert orientation matrix to rpy

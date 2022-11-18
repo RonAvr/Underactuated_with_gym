@@ -38,6 +38,11 @@ x_pos = 0.02
 y_pos = 0
 z_pos = center_off_body_z - height / 2
 
+# camera pos
+camera_x = 0.025
+camera_y = 0
+camera_z = 0.0625
+
 MODEL_XML = f"""
 <?xml version="1.0" ?>
 <mujoco>
@@ -59,6 +64,7 @@ MODEL_XML = f"""
       <light diffuse="1 1 1" pos="0 0 300" dir="0 0 -1"/>
 
       <body name="base_link">
+          <site name="camera_pos" pos="{camera_x} {camera_y} {camera_z}" size="0.0015"/>
           <geom type="mesh" mesh="base_link"/>
 
           <!-- Creating the right arm with its motor -->
