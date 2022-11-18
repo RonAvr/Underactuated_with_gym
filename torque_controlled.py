@@ -20,6 +20,8 @@ loop = 8 * root_loop
 pos_data = []
 time_data = []
 
+en
+
 for i in range(loop):
 
     if (i%root_loop == 0):

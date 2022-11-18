@@ -23,7 +23,7 @@ class Torque(MuJocoPyEnv, utils.EzPickle):
             low=-np.inf, high=np.inf, shape=(111,), dtype=np.float64
         )
         MuJocoPyEnv.__init__(
-            self, "torque.xml", 5, observation_space=observation_space, **kwargs
+            self, "torque_ellipsoid.xml", 5, observation_space=observation_space, **kwargs
         )
         utils.EzPickle.__init__(self)
 
@@ -164,7 +164,7 @@ class Torque(MuJocoPyEnv, utils.EzPickle):
         if (len(ctrl) != 3):
             raise ValueError('The ctrl array must be at size of 3')
 
-        calibration = 0.000001
+        calibration = 0.001
         self.sim.data.ctrl[0] = calibration * ctrl[0]
         self.sim.data.ctrl[1] = calibration * ctrl[1]
         self.sim.data.ctrl[2] = calibration * ctrl[2]
@@ -173,10 +173,11 @@ class Torque(MuJocoPyEnv, utils.EzPickle):
         return self.sim.data.sensordata
 
     def close_fingers(self):
-        right_motor = 0.0001
-        left_motor = 0.0001
-        center_motor = 0.0001
+        right_motor = 0.1
+        left_motor = 0.1
+        center_motor = 0.1
         while(bool(right_motor and left_motor and center_motor)):
+            self.set_motor_ctrl([right_motor, left_motor, center_motor])
             sensor_data = self.get_sensor_data()
             if(sensor_data[0] != 0):
                 right_motor = 0
@@ -188,6 +189,50 @@ class Torque(MuJocoPyEnv, utils.EzPickle):
             self.render()
 
         return
+
+    def get_actuators_data(self):
+        actuator_force = self.sim.data.actuator_force.tolist()
+        actuator_length = self.sim.data.actuator_length.tolist()
+        actuator_moment = self.sim.data.actuator_moment.tolist()
+        actuator_velocity = self.sim.data.actuator_velocity.tolist()
+        actuators_data = {
+            'actuator_force' : actuator_force,
+            'actuator_length' : actuator_length,
+            'actuator_moment' : actuator_moment,
+            'actuator_velocity' : actuator_velocity
+        }
+
+        return actuators_data
+
+    def get_joints_data(self):
+        # Getting right joins vel and pos
+        proximal_right_joint_pos = self.sim.data.get_joint_qpos('swivel_proximal_r')
+        proximal_right_joint_vel = self.sim.data.get_joint_qvel('swivel_proximal_r')
+        distal_right_joint_pos = self.sim.data.get_joint_qpos('proximal_distal_r')
+        distal_right_joint_vel = self.sim.data.get_joint_qvel('proximal_distal_r')
+
+        # Getting left joins vel and pos
+        proximal_left_joint_pos = self.sim.data.get_joint_qpos('swivel_proximal_l')
+        proximal_left_joint_vel = self.sim.data.get_joint_qvel('swivel_proximal_l')
+        distal_left_joint_pos = self.sim.data.get_joint_qpos('proximal_distal_l')
+        distal_left_joint_vel = self.sim.data.get_joint_qvel('proximal_distal_l')
+
+        # Getting center joins vel and pos
+        proximal_center_joint_pos = self.sim.data.get_joint_qpos('swivel_proximal_c')
+        proximal_center_joint_vel = self.sim.data.get_joint_qvel('swivel_proximal_c')
+        distal_center_joint_pos = self.sim.data.get_joint_qpos('proximal_distal_c')
+        distal_center_joint_vel = self.sim.data.get_joint_qvel('proximal_distal_c')
+
+        joints_data = {
+            'right_proximal' : [proximal_right_joint_pos, proximal_right_joint_vel],
+            'right_distal' : [distal_right_joint_pos, distal_right_joint_vel],
+            'left_proximal' : [proximal_left_joint_pos, proximal_left_joint_vel],
+            'left_distal' : [distal_left_joint_pos, distal_left_joint_vel],
+            'center_proximal' : [proximal_center_joint_pos, proximal_center_joint_vel],
+            'center_distal' : [distal_center_joint_pos, distal_center_joint_vel]
+        }
+
+        return joints_data
 
     def move_motors(self, movement):
         movement = 0.0001 * np.array(movement)

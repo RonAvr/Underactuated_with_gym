@@ -4,3 +4,33 @@ ERROR: GLEW initalization error: Missing GL version
 Sun Oct  2 14:14:06 2022
 ERROR: GLEW initalization error: Missing GL version
 
+Sat Nov  5 23:31:40 2022
+ERROR: GLEW initalization error: Missing GL version
+
+Sat Nov  5 23:34:28 2022
+ERROR: Unexpected action 0 in mjv_moveCamera
+
+Sat Nov  5 23:37:21 2022
+ERROR: Unexpected action 12 in mjv_moveCamera
+
+Sat Nov  5 23:38:43 2022
+ERROR: Unexpected action 0 in mjv_moveCamera
+
+Sat Nov  5 23:38:53 2022
+ERROR: Unexpected action 0 in mjv_moveCamera
+
+Sat Nov  5 23:39:01 2022
+ERROR: Unexpected action 0 in mjv_moveCamera
+
+Sat Nov  5 23:39:08 2022
+ERROR: Unexpected action 0 in mjv_moveCamera
+
+Sat Nov  5 23:40:10 2022
+ERROR: Unexpected action 0 in mjv_moveCamera
+
+Sat Nov  5 23:44:05 2022
+ERROR: Unexpected action 0 in mjv_moveCamera
+
+Sun Nov  6 00:00:17 2022
+ERROR: Unexpected action 0 in mjv_moveCamera
+
