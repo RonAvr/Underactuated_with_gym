@@ -24,42 +24,9 @@ class Move(MuJocoPyEnv, utils.EzPickle):
             low=-np.inf, high=np.inf, shape=(111,), dtype=np.float64
         )
         MuJocoPyEnv.__init__(
-            self, "movement_elipsoid.xml", 5, observation_space=observation_space, **kwargs
+            self, "movement.xml", 5, observation_space=observation_space, **kwargs
         )
         utils.EzPickle.__init__(self)
-
-    def step2(self, a):
-        xposbefore = self.get_body_com("distal_r")[0]
-        self.do_simulation(a, self.frame_skip)
-        xposafter = self.get_body_com("distal_r")[0]
-
-        self.renderer.render_step()
-
-        forward_reward = (xposafter - xposbefore) / self.dt
-        ctrl_cost = 0.5 * np.square(a).sum()
-        contact_cost = (
-            0.5 * 1e-3 * np.sum(np.square(np.clip(self.sim.data.cfrc_ext, -1, 1)))
-        )
-        survive_reward = 1.0
-        reward = forward_reward - ctrl_cost - contact_cost + survive_reward
-        state = self.state_vector()
-        not_terminated = (
-            np.isfinite(state).all() and state[2] >= 0.2 and state[2] <= 1.0
-        )
-        terminated = not not_terminated
-        ob = self._get_obs()
-        return (
-            ob,
-            reward,
-            terminated,
-            False,
-            dict(
-                reward_forward=forward_reward,
-                reward_ctrl=-ctrl_cost,
-                reward_contact=-contact_cost,
-                reward_survive=survive_reward,
-            ),
-        )
 
     def _get_obs(self):
         return np.concatenate(
@@ -89,32 +56,15 @@ class Move(MuJocoPyEnv, utils.EzPickle):
         Returns: Resetting the simulation to the inputs values
         """
 
-        # if (len(qpos_reset) != 9):
-        #     raise ValueError('The qpos_reset array must be at size of 9')
-
         self.sim.data.qpos[:] = qpos_reset
         self.sim.data.qvel[:] = 0
         self.sim.step()
         self.sim.forward()
 
-    def set_reset2(self, pos):
-        self.sim.data.qpos[1] = self.sim.data.qpos[4] = pos
-        self.sim.data.qpos[7] = -pos
-        self.sim.data.qpos[:] = np.array([0, pos, 0, 0, pos, 0, 0, -pos, 0])
-        self.sim.data.qvel[:] = 0
-        self.sim.step()
-        self.sim.forward()
-
-    def get_obs(self):
-        return np.concatenate(
-            [
-                self.sim.data.qpos,
-                self.sim.data.qvel,
-                self.sim.data.ctrl
-            ]
-        )
-
     def get_actuators_data(self):
+        """
+        Returns: All actuators data
+        """
         actuator_force = self.sim.data.actuator_force.tolist()
         actuator_length = self.sim.data.actuator_length.tolist()
         actuator_moment = self.sim.data.actuator_moment.tolist()
@@ -129,6 +79,9 @@ class Move(MuJocoPyEnv, utils.EzPickle):
         return actuators_data
 
     def get_joints_data(self):
+        """
+        Returns: All joints data
+        """
         # Getting right joins vel and pos
         proximal_right_joint_pos = self.sim.data.get_joint_qpos('swivel_proximal_r')
         proximal_right_joint_vel = self.sim.data.get_joint_qvel('swivel_proximal_r')
@@ -158,8 +111,13 @@ class Move(MuJocoPyEnv, utils.EzPickle):
 
         return joints_data
 
-
     def get_body_pos(self, body_name):
+        """
+        Args:
+            body_name: the name of the body, str
+
+        Returns: the position of the body
+        """
         # The reference position where the camera is located
         ref_pos = self.sim.data.get_site_xpos('camera_pos')
         # ref_pos = [0.025, 0, 0.0625]
@@ -181,6 +139,12 @@ class Move(MuJocoPyEnv, utils.EzPickle):
         return rel_pos
 
     def calc_quat(self, body_name):
+        """
+        Args:
+            body_name: the name of the body, str
+
+        Returns: the quat array of the body
+        """
         xmat = self.sim.data.get_geom_xmat(body_name)
 
         r = R.from_matrix(xmat)
@@ -220,13 +184,16 @@ class Move(MuJocoPyEnv, utils.EzPickle):
         self.sim.data.ctrl[1] += calibration * ctrl[1]
         self.sim.data.ctrl[2] += calibration * ctrl[2]
 
-    def new_step(self):
-        self.sim.step()
-
     def get_sensor_data(self):
+        """
+        Returns: all the data from the sensors in the model
+        """
         return self.sim.data.sensordata
 
     def close_fingers(self):
+        """
+        This method is for closing the fingers on the target body
+        """
         right_motor = 0.01
         left_motor = 0.01
         center_motor = 0.001
@@ -240,16 +207,6 @@ class Move(MuJocoPyEnv, utils.EzPickle):
                 center_motor = 0
             self.set_motor_ctrl([right_motor, left_motor, center_motor])
             self.sim.step()
-            # self.render()
+            self.render()
 
         return
-
-    def move_motors(self, movement):
-        movement = 0.0001 * np.array(movement)
-        zeros = [0,0,0]
-        self.set_motor_ctrl(movement)
-        self.sim.step()
-        self.render()
-        self.set_motor_ctrl(zeros)
-        self.sim.step()
-        self.render()

@@ -14,7 +14,6 @@ def save_data():
     joints_data.append(current_joints_data)
     time_data.append(env.sim.data.time)
 
-
 # Making the new environment
 env = gym.make("Torque")
 
@@ -22,7 +21,7 @@ env = gym.make("Torque")
 observation, infos = env.reset(seed=42, return_info=True)
 
 # Resetting the position of the relevant joints
-qpos_reset = np.array([ 0, 0.17, 0, 0, 0.17, 0, 0, -0.17, 0, 0, 0, 0, 0, 0, 0, 0])
+qpos_reset = np.array([ 0, 0.13, 0, 0, 0.13, 0, 0, -0.13, 0, 0, 0, 0, 0, 0, 0, 0])
 env.set_reset(qpos_reset)
 
 # Number of loops the simulation going to loop through
@@ -44,7 +43,7 @@ for i in range(loop):
 
     # Taking a step and rendering the environment
     env.sim.step()
-    # env.render()
+    env.render()
 
 # Data dict that contains the position data and the time data
 data = {

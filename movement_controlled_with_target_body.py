@@ -22,7 +22,7 @@ env = gym.make("Move")
 observation, infos = env.reset(seed=42, return_info=True)
 
 # Resetting the position of the relevant joints
-qpos_reset = np.array([ 0, 0.17, 0, 0, 0.17, 0, 0, -0.17, 0, 0, 0, 0, 0, 0, 0, 0])
+qpos_reset = np.array([ 0, 0.15, 0, 0, 0.15, 0, 0, -0.15, 0, 0, 0, 0, 0, 0, 0, 0])
 env.set_reset(qpos_reset)
 
 # Number of loops the simulation going to loop through

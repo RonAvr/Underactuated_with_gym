@@ -12,7 +12,7 @@
         <mesh file="swivel_1.STL"/>
    </asset>
    
-   <option gravity="0 0 -0.000981" integrator="RK4"/>
+   <option gravity="0 0 -0.00981" integrator="RK4"/>
 
    <worldbody>
 
@@ -114,9 +114,9 @@
       </body>
     <body name="target_body">
         
-    <geom mass="0.020525072003453316" pos="0.019 0 0.175" size="0.005 0.01 0.07" type="ellipsoid" name="target_body"/>
+    <geom mass="0.004900000000000001" pos="0.018 0 0.175" size="0.005 0.01 0.07" type="box" name="target_body"/>
     
-        <site name="target_body" pos="0.019 0 0.10499999999999998" size="0.0015"/>
+        <site name="target_body" pos="0.018 0 0.10499999999999998" size="0.0015"/>
         <joint type="free"/>
     </body>
    </worldbody>
@@ -167,7 +167,7 @@
    </tendon>
 
    <actuator> <!-- Adding motors to the relevant joints -->
-        <motor joint="joint_1" name="swivel_proximal_r_motor" gear="1" ctrllimited="true" ctrlrange="-10 10"/>
+        <motor joint="joint_1" name="swivel_proximal_r_motor" gear="1" ctrllimited="true" ctrlrange="-10 10" kp="1"/>
 
         <motor joint="joint_2" name="swivel_proximal_l_motor" gear="1" ctrllimited="true" ctrlrange="-10 10"/>
 
